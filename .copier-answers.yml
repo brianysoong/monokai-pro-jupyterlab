@@ -1,0 +1,15 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.5.2
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: brian.y.soong@gmail.com
+author_name: brianysoong
+has_ai_rules: false
+has_binder: false
+has_settings: false
+kind: theme
+labextension_name: monokai-pro-jupyterlab
+project_short_description: A JupyterLab theme based on Monokai Pro.
+python_name: monokai_pro_jupyterlab
+repository: https://github.com/brianysoong/monokai-pro-jupyterlab
+test: true
+
