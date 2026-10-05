@@ -8,7 +8,10 @@ node_modules/
 .ipynb_checkpoints
 *.tsbuildinfo
 # The built extension is committed so `pip install git+...` needs no Node.js;
-# CI checks it matches the sources.
+# CI checks it matches the sources. Commit production builds (`jlpm
+# build:prod`) only; these files come from development builds.
+jupyterlab_monokai_pro_ce/labextension/build_log.json
+jupyterlab_monokai_pro_ce/labextension/static/*.map
 # Version file is handled by hatchling
 jupyterlab_monokai_pro_ce/_version.py
 

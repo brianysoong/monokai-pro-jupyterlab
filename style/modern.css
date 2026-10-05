@@ -497,13 +497,18 @@
   background: transparent;
 }
 
+:root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-content {
+  /* don't stretch, so the "+" follows the last tab as on document tabs */
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
 :root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-addButton {
   /* Lumino's default "+" button is empty; JupyterLab only fills in the
      document tabs' one */
   width: 24px;
   height: 24px;
   align-self: center;
-  margin: 0 var(--mm-gap) 0 0;
   color: var(--jp-ui-font-color1);
 }
 
