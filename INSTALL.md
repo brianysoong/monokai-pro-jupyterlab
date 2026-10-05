@@ -8,13 +8,29 @@ Install into the Python environment that runs JupyterLab (4.0 or newer). The rep
 pip install git+https://github.com/brianysoong/monokai-pro-jupyterlab.git
 ```
 
-If you can't reach GitHub from the machine, clone the repository somewhere you can, copy it over, and install from the folder:
+To update, reinstall. The version number doesn't change between commits, so tell pip to reinstall anyway:
 
 ```bash
-pip install ./monokai-pro-jupyterlab
+pip install --force-reinstall --no-deps git+https://github.com/brianysoong/monokai-pro-jupyterlab.git
 ```
 
-To update, run the `pip install` command again with `--upgrade`. To remove the theme:
+#### Machines without internet access
+
+Installing from git needs internet access, to reach GitHub and to download the package's build tools. For an offline machine, build a wheel on a machine that has access:
+
+```bash
+pip wheel --no-deps -w dist git+https://github.com/brianysoong/monokai-pro-jupyterlab.git
+```
+
+Then copy the `.whl` file from `dist/` over and install it. Installing a wheel needs nothing from the internet:
+
+```bash
+pip install jupyterlab_monokai_pro_ce-*.whl
+```
+
+#### Removing it
+
+To remove the theme:
 
 ```bash
 pip uninstall jupyterlab_monokai_pro_ce
