@@ -3,7 +3,11 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { IThemeManager, IToolbarWidgetRegistry } from '@jupyterlab/apputils';
+import {
+  ICommandPalette,
+  IThemeManager,
+  IToolbarWidgetRegistry
+} from '@jupyterlab/apputils';
 import {
   EditorExtensionRegistry,
   IEditorExtensionRegistry,
@@ -23,7 +27,11 @@ import {
   MenuButton,
   TitleBarLayout
 } from './header';
-import { refitShell, routeTerminalsToPanel } from './layout';
+import {
+  addTerminalCommands,
+  refitShell,
+  routeTerminalsToPanel
+} from './layout';
 import { themeTerminals } from './terminal';
 
 const PLUGIN_ID = 'jupyterlab-monokai-pro-ce:plugin';
@@ -56,6 +64,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     INotebookTracker,
     ILabShell,
     IToolbarWidgetRegistry,
+    ICommandPalette,
     ISettingRegistry
   ],
   activate: (
@@ -67,6 +76,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     notebooks: INotebookTracker | null,
     labShell: ILabShell | null,
     toolbars: IToolbarWidgetRegistry | null,
+    palette: ICommandPalette | null,
     settingRegistry: ISettingRegistry | null
   ) => {
     for (const { name, variant, isLight } of VARIANTS) {
@@ -129,6 +139,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     let terminalsInPanel = true;
     if (labShell && terminals) {
+      addTerminalCommands(app.commands, labShell, terminals);
+      for (const command of [
+        'monokai-pro-ce:toggle-terminal',
+        'monokai-pro-ce:new-terminal'
+      ]) {
+        palette?.addItem({ command, category: 'Terminal' });
+      }
       routeTerminalsToPanel(
         labShell,
         terminals,

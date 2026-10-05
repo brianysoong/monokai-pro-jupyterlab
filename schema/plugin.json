@@ -1,4 +1,16 @@
 {
+  "jupyter.lab.shortcuts": [
+    {
+      "command": "monokai-pro-ce:toggle-terminal",
+      "keys": ["Ctrl `"],
+      "selector": "body"
+    },
+    {
+      "command": "monokai-pro-ce:new-terminal",
+      "keys": ["Ctrl Shift `"],
+      "selector": "body"
+    }
+  ],
   "jupyter.lab.toolbars": {
     "TopBar": [
       {

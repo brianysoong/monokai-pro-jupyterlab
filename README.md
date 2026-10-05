@@ -33,8 +33,8 @@ Turn on _Settings → Settings Editor → Monokai Pro (CE) → Modern UI_ to res
 - **Title bar:** VS Code's command center (it shows the folder JupyterLab was started in, and clicking it opens the command palette), plus side-panel toggles. In narrower windows the title bar stays on one row and gives up space in VS Code's order: the command center shrinks and moves off-center, then becomes a search icon, then the menus collapse into a single ☰ menu button.
 - **Tabs and floating panels:** tabs are sized to their titles, and the current tab joins its document. Menus, the command palette, dialogs and the completer float as rounded panels. List selections are pills.
 - **Notebook cells:** rounded editors whose outline brightens while you edit, a run button in the gutter above the execution count, a slim marker for the active cell, and a floating cell toolbar.
-- **Icons:** [Codicons](https://github.com/microsoft/vscode-codicons), VS Code's icon set, replace JupyterLab's interface icons. Colored file-type icons are kept.
-- **Terminals:** new terminals open in the bottom panel.
+- **Icons:** [Codicons](https://github.com/microsoft/vscode-codicons), VS Code's icon set, replace JupyterLab's interface icons. Colored file-type icons are kept. Every icon the Modern UI adds is a Codicon; nothing is custom-drawn.
+- **Terminals:** new terminals open in the bottom panel. As in VS Code, **Ctrl+`** shows, focuses or hides the terminal panel, and **Ctrl+Shift+`** opens a new terminal. Both work with the Modern UI off too, and can be changed in _Settings → Settings Editor → Keyboard Shortcuts_.
 
 The icons and the terminal placement each have their own setting. The Modern UI only uses JupyterLab's theme variables, so it also works with JupyterLab's built-in Light and Dark themes.
 
