@@ -1,0 +1,543 @@
+/* -----------------------------------------------------------------------------
+| Component refinements that variables alone cannot express.
+|---------------------------------------------------------------------------- */
+
+/* Monospace typography (mirrors JupyterLab's own themes) */
+:root[data-mpce-theme] .jp-ThemedContainer tt,
+:root[data-mpce-theme] .jp-ThemedContainer code,
+:root[data-mpce-theme] .jp-ThemedContainer kbd,
+:root[data-mpce-theme] .jp-ThemedContainer samp,
+:root[data-mpce-theme] .jp-ThemedContainer pre {
+  font-family: var(--jp-code-font-family);
+  font-size: var(--jp-code-font-size);
+  line-height: var(--jp-code-line-height);
+}
+
+/* ---- Figures ------------------------------------------------------------
+   Plots saved with a transparent background draw dark text straight onto
+   the page, which disappears on a dark theme. JupyterLab only backs images
+   that carry a `needs_background` hint (matplotlib's inline backend adds
+   one); saved PNGs, other libraries and SVG output get nothing. The
+   `figureBackground` setting picks the behavior:
+     white - back every image output in the dark theme, as on paper
+     auto  - back only images with the hint
+     none  - never back images */
+
+:root[data-mpce-theme][data-mpce-figure-background='none'] {
+  --mpce-figure-backing: transparent;
+}
+
+:root[data-mpce-theme='dark'][data-mpce-figure-background='white']
+  :is(
+    .jp-RenderedImage img,
+    .jp-RenderedSVG img,
+    .jp-RenderedSVG svg,
+    .jp-ImageViewer img
+  ),
+:root[data-mpce-theme='dark'][data-mpce-figure-background='auto']
+  .jp-RenderedImage
+  img.jp-needs-light-background {
+  background-color: var(--mpce-figure-backing);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+:root[data-mpce-theme][data-mpce-figure-background='none']
+  .jp-RenderedImage
+  img:is(.jp-needs-light-background, .jp-needs-dark-background) {
+  background-color: transparent;
+}
+
+/* ---- Shell: title bar, activity bar, status bar --------------------------
+   Same layering as Monokai Pro for VS Code: the menu bar and side panels on
+   dark1, the activity bar on dark2, documents on the editor background. */
+
+:root[data-mpce-theme] body,
+:root[data-mpce-theme] .jp-LabShell {
+  background: var(--mpce-dark1);
+}
+
+:root[data-mpce-theme] #jp-top-panel,
+:root[data-mpce-theme]
+  .jp-LabShell[data-shell-mode='single-document']
+  #jp-menu-panel {
+  border-bottom-color: var(--jp-border-color2);
+}
+
+:root[data-mpce-theme] .jp-SideBar.lm-TabBar,
+:root[data-mpce-theme] .jp-SideBar .lm-TabBar-tab:not(.lm-mod-current),
+:root[data-mpce-theme] .jp-SideBar .lm-TabBar-tab:hover:not(.lm-mod-current) {
+  background: var(--mpce-dark2);
+}
+
+:root[data-mpce-theme] .jp-SideBar.lm-TabBar .lm-TabBar-tab + .lm-TabBar-tab,
+:root[data-mpce-theme]
+  .jp-SideBar.lm-TabBar
+  .lm-TabBar-tab.lm-mod-current
+  + .lm-TabBar-tab,
+:root[data-mpce-theme]
+  .jp-SideBar.lm-TabBar
+  .lm-TabBar-tab
+  + .lm-TabBar-tab.lm-mod-current {
+  border-top-color: var(--mpce-dark2);
+}
+
+:root[data-mpce-theme]
+  .jp-SideBar.lm-TabBar
+  .lm-TabBar-tab.lm-mod-current:last-child {
+  border-bottom-color: var(--mpce-dark2);
+}
+
+:root[data-mpce-theme] .jp-SideBar.lm-TabBar.jp-mod-left::after,
+:root[data-mpce-theme] .jp-SideBar.lm-TabBar.jp-mod-right::after {
+  border-color: var(--jp-border-color2);
+}
+
+/* Activity bar icons: dim when inactive, bright when current, with the
+   highlight as an edge marker */
+:root[data-mpce-theme]
+  .jp-SideBar
+  .lm-TabBar-tab:not(.lm-mod-current)
+  .jp-icon3[fill] {
+  fill: var(--mpce-dimmed3);
+}
+
+:root[data-mpce-theme] .jp-SideBar .lm-TabBar-tab:hover .jp-icon3[fill] {
+  fill: var(--mpce-dimmed1);
+}
+
+:root[data-mpce-theme]
+  .jp-SideBar
+  .lm-TabBar-tab.lm-mod-current
+  .jp-icon3[fill] {
+  fill: var(--mpce-text);
+}
+
+:root[data-mpce-theme] .jp-SideBar.jp-mod-left .lm-TabBar-tab.lm-mod-current {
+  box-shadow: inset 2px 0 0 var(--mpce-highlight);
+}
+
+:root[data-mpce-theme] .jp-SideBar.jp-mod-right .lm-TabBar-tab.lm-mod-current {
+  box-shadow: inset -2px 0 0 var(--mpce-highlight);
+}
+
+:root[data-mpce-theme] .jp-StatusBar-Widget {
+  background: var(--mpce-dark1);
+  border-top: var(--jp-border-width) solid var(--jp-border-color2);
+}
+
+:root[data-mpce-theme] .jp-StatusBar-Item,
+:root[data-mpce-theme] .jp-StatusBar-TextItem {
+  color: var(--mpce-dimmed2);
+}
+
+/* ---- Document tabs ------------------------------------------------------
+   The current tab joins the document below it and takes the highlight
+   color, as Monokai Pro's editor tabs do. */
+
+:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab,
+:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-addButton {
+  background: var(--mpce-dark1);
+  color: var(--mpce-dimmed2);
+}
+
+:root[data-mpce-theme]
+  .lm-DockPanel-tabBar
+  .lm-TabBar-tab:hover:not(.lm-mod-current) {
+  background: var(--mpce-dark1);
+  color: var(--mpce-text);
+}
+
+:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab.lm-mod-current {
+  background: var(--mpce-background);
+  color: var(--mpce-dimmed1);
+}
+
+:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab.jp-mod-current {
+  color: var(--mpce-highlight);
+}
+
+:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab,
+:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab::after {
+  border-color: var(--jp-border-color2);
+}
+
+/* Frame documents with the same dark groove used for other separators,
+   rather than a light outline */
+:root[data-mpce-theme] .lm-DockPanel-widget,
+:root[data-mpce-theme] .lm-TabPanel-stackedPanel {
+  border-color: var(--jp-border-color2);
+}
+
+/* Document toolbars sit on the editor background, side-panel toolbars keep
+   the panel color */
+:root[data-mpce-theme] .jp-MainAreaWidget > .jp-Toolbar {
+  background: var(--mpce-background);
+}
+
+/* ---- File browser -------------------------------------------------------
+   JupyterLab fills the selected row with the brand color; Monokai Pro
+   marks selection with a faint wash and highlighted text instead. */
+
+:root[data-mpce-theme] .jp-DirListing-item:hover:not(.jp-mod-selected) {
+  background: rgba(var(--mpce-overlay-rgb), 0.05);
+}
+
+:root[data-mpce-theme] .jp-DirListing-item.jp-mod-selected {
+  background: rgba(var(--mpce-overlay-rgb), 0.08);
+  color: var(--mpce-highlight);
+}
+
+/* JupyterLab turns the icons of selected rows white; keep each icon's own
+   color instead, since the row is no longer filled. */
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon0[fill] {
+  fill: var(--jp-inverse-layout-color0);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon1[fill] {
+  fill: var(--jp-inverse-layout-color1);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon2[fill] {
+  fill: var(--jp-inverse-layout-color2);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon3[fill] {
+  fill: var(--jp-inverse-layout-color3);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon4[fill] {
+  fill: var(--jp-inverse-layout-color4);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-accent0[fill] {
+  fill: var(--jp-layout-color0);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-accent1[fill] {
+  fill: var(--jp-layout-color1);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-accent2[fill] {
+  fill: var(--jp-layout-color2);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-accent3[fill] {
+  fill: var(--jp-layout-color3);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-accent4[fill] {
+  fill: var(--jp-layout-color4);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-brand0[fill] {
+  fill: var(--jp-brand-color0);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-brand1[fill] {
+  fill: var(--jp-brand-color1);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-brand2[fill] {
+  fill: var(--jp-brand-color2);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-brand3[fill] {
+  fill: var(--jp-brand-color3);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-brand4[fill] {
+  fill: var(--jp-brand-color4);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-warn0[fill] {
+  fill: var(--jp-warn-color0);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-warn1[fill] {
+  fill: var(--jp-warn-color1);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-warn2[fill] {
+  fill: var(--jp-warn-color2);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(.jp-icon-selectable, .jp-icon-selectable-inverse).jp-icon-warn3[fill] {
+  fill: var(--jp-warn-color3);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-icon-contrast0[fill] {
+  fill: var(--jp-icon-contrast-color0);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-icon-contrast1[fill] {
+  fill: var(--jp-icon-contrast-color1);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-icon-contrast2[fill] {
+  fill: var(--jp-icon-contrast-color2);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-icon-contrast3[fill] {
+  fill: var(--jp-icon-contrast-color3);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-jupyter-icon-color[fill] {
+  fill: var(--jp-jupyter-icon-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-notebook-icon-color[fill] {
+  fill: var(--jp-notebook-icon-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-json-icon-color[fill] {
+  fill: var(--jp-json-icon-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-console-icon-color[fill] {
+  fill: var(--jp-console-icon-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-console-icon-background-color[fill] {
+  fill: var(--jp-console-icon-background-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-terminal-icon-color[fill] {
+  fill: var(--jp-terminal-icon-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-terminal-icon-background-color[fill] {
+  fill: var(--jp-terminal-icon-background-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-text-editor-icon-color[fill] {
+  fill: var(--jp-text-editor-icon-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-selected
+  :is(
+    .jp-icon-selectable,
+    .jp-icon-selectable-inverse
+  ).jp-inspector-icon-color[fill] {
+  fill: var(--jp-inspector-icon-color);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-item.jp-mod-running.jp-mod-selected
+  .jp-DirListing-itemIcon::before {
+  color: var(--mpce-accent4);
+}
+
+:root[data-mpce-theme]
+  .jp-DirListing-content
+  .jp-DirListing-item.jp-mod-selected
+  mark {
+  color: inherit;
+}
+
+/* ---- Dialogs and buttons ------------------------------------------------
+   JupyterLab hard-codes white text on dialog buttons, which is illegible
+   on the yellow highlight and on light-theme greys. */
+
+:root[data-mpce-theme] button.jp-mod-styled.jp-mod-accept,
+:root[data-mpce-theme] button.jp-mod-styled.jp-mod-warn {
+  color: var(--mpce-on-highlight);
+}
+
+:root[data-mpce-theme] button.jp-mod-styled.jp-mod-reject {
+  color: var(--mpce-text);
+}
+
+/* The backdrop is a <dialog>; drop the browser's default frame around the
+   viewport */
+:root[data-mpce-theme] .jp-Dialog.jp-ThemedContainer {
+  border: none;
+}
+
+/* ---- Menus and the command palette --------------------------------------
+   Monokai Pro marks the active item with highlighted text on a faint wash,
+   not with a solid fill. */
+
+:root[data-mpce-theme] .lm-Menu-item.lm-mod-active,
+:root[data-mpce-theme] .lm-MenuBar-item.lm-mod-active {
+  background: rgba(var(--mpce-overlay-rgb), 0.08);
+  color: var(--mpce-highlight);
+}
+
+:root[data-mpce-theme]
+  .lm-MenuBar.lm-mod-active
+  .lm-MenuBar-item.lm-mod-active {
+  background: var(--jp-layout-color0);
+  color: var(--mpce-highlight);
+}
+
+:root[data-mpce-theme] .lm-Menu-item[data-type='separator'] > div::after {
+  border-top-color: var(--jp-border-color1);
+  mix-blend-mode: normal;
+}
+
+:root[data-mpce-theme] .lm-CommandPalette-item.lm-mod-active,
+:root[data-mpce-theme]
+  .lm-CommandPalette-item.lm-mod-active:hover:not(.lm-mod-disabled) {
+  background: rgba(var(--mpce-overlay-rgb), 0.08);
+  color: var(--mpce-highlight);
+}
+
+:root[data-mpce-theme]
+  .lm-CommandPalette-item:hover:not(.lm-mod-active, .lm-mod-disabled) {
+  background: rgba(var(--mpce-overlay-rgb), 0.05);
+}
+
+:root[data-mpce-theme] .lm-CommandPalette-itemLabel > mark,
+:root[data-mpce-theme]
+  .lm-CommandPalette-item.lm-mod-active
+  .lm-CommandPalette-itemLabel
+  > mark {
+  color: var(--mpce-text);
+}
+
+:root[data-mpce-theme]
+  .lm-CommandPalette-item.lm-mod-active
+  .jp-icon-selectable[fill] {
+  fill: var(--mpce-highlight);
+}
+
+/* Search-box icon (palette, file filter, extension manager) */
+:root[data-mpce-theme] .jp-SearchIconGroup {
+  background-color: transparent;
+}
+
+:root[data-mpce-theme] .jp-SearchIconGroup .jp-icon3[fill] {
+  fill: var(--mpce-dimmed2);
+}
+
+/* ---- Completer, tooltips, inspector -------------------------------------
+   Monokai Pro's editor widgets: a raised panel, with the active suggestion
+   one step lighter rather than filled with the highlight. */
+
+:root[data-mpce-theme] .jp-Completer,
+:root[data-mpce-theme] .jp-Tooltip {
+  background: var(--mpce-panel);
+  border-color: var(--jp-border-color2);
+}
+
+:root[data-mpce-theme] .jp-Completer-item {
+  color: var(--mpce-dimmed1);
+}
+
+:root[data-mpce-theme] .jp-Completer-item:hover {
+  background: rgba(var(--mpce-overlay-rgb), 0.06);
+  opacity: 1;
+}
+
+:root[data-mpce-theme] .jp-Completer-item.jp-mod-active {
+  background: var(--mpce-panel-selected);
+  color: var(--mpce-text);
+}
+
+:root[data-mpce-theme] .jp-Completer-item .jp-Completer-match mark {
+  color: var(--mpce-text);
+}
+
+:root[data-mpce-theme] .jp-Completer-item .jp-Completer-monogram {
+  color: var(--mpce-on-highlight);
+}

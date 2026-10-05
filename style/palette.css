@@ -1,0 +1,88 @@
+/* -----------------------------------------------------------------------------
+| Monokai Pro (CE) palettes.
+|
+| Raw colors come from the official Monokai Pro palette (monokai.pro). The
+| semantic tokens below them encode how Monokai Pro itself uses the palette in
+| its editor themes (panels, highlights, selections), so the JupyterLab mapping
+| in variables.css can stay identical for both variants.
+|
+| Both variants live in one stylesheet; the active one is chosen by the
+| `data-mpce-theme` attribute that src/index.ts sets on <html>.
+|---------------------------------------------------------------------------- */
+
+:root[data-mpce-theme='dark'] {
+  color-scheme: dark;
+
+  /* Official palette: Monokai Pro (default filter) */
+  --mpce-dark2: #19181a;
+  --mpce-dark1: #221f22;
+  --mpce-background: #2d2a2e;
+  --mpce-text: #fcfcfa;
+  --mpce-accent1: #ff6188; /* red: keywords, errors */
+  --mpce-accent2: #fc9867; /* orange: parameters, warnings */
+  --mpce-accent3: #ffd866; /* yellow: strings, highlights */
+  --mpce-accent4: #a9dc76; /* green: functions, success */
+  --mpce-accent5: #78dce8; /* blue: classes, types, info */
+  --mpce-accent6: #ab9df2; /* purple: constants, numbers */
+  --mpce-dimmed1: #c1c0c0;
+  --mpce-dimmed2: #939293;
+  --mpce-dimmed3: #727072;
+  --mpce-dimmed4: #5b595c;
+  --mpce-dimmed5: #403e41;
+
+  /* Semantic tokens */
+  --mpce-panel: var(--mpce-dimmed5); /* menus, tooltips, completer */
+  --mpce-panel-selected: var(--mpce-dimmed4);
+  --mpce-highlight: var(--mpce-accent3); /* active tab, active cell, links */
+  --mpce-on-highlight: var(--mpce-background);
+  --mpce-figure-backing: #fff;
+
+  /* Surface layers, in JupyterLab's --jp-layout-color0..4 order */
+  --mpce-layer0: var(--mpce-background);
+  --mpce-layer1: var(--mpce-dark1);
+  --mpce-layer2: var(--mpce-dimmed5);
+  --mpce-layer3: var(--mpce-dimmed4);
+  --mpce-layer4: var(--mpce-dimmed3);
+
+  /* rgb triplets, for the places JupyterLab composes rgba() itself */
+  --mpce-overlay-rgb: 252, 252, 250; /* text */
+  --mpce-scrollbar-rgb: 91, 89, 92; /* dimmed4 */
+  --mpce-backdrop: rgba(25, 24, 26, 0.6);
+}
+
+:root[data-mpce-theme='light'] {
+  color-scheme: light;
+
+  /* Official palette: Monokai Pro Light */
+  --mpce-dark2: #e0dad9;
+  --mpce-dark1: #ede7e5;
+  --mpce-background: #faf4f2;
+  --mpce-text: #29242a;
+  --mpce-accent1: #e14775;
+  --mpce-accent2: #e16032;
+  --mpce-accent3: #cc7a0a;
+  --mpce-accent4: #269d69;
+  --mpce-accent5: #1c8ca8;
+  --mpce-accent6: #7058be;
+  --mpce-dimmed1: #706b6e;
+  --mpce-dimmed2: #918c8e;
+  --mpce-dimmed3: #a59fa0;
+  --mpce-dimmed4: #bfb9ba;
+  --mpce-dimmed5: #d3cdcc;
+
+  /* Semantic tokens. Monokai Pro Light highlights with red, not yellow,
+     because yellow lacks contrast on a light background. */
+  --mpce-panel: #fefaf9;
+  --mpce-panel-selected: var(--mpce-dark1);
+  --mpce-highlight: var(--mpce-accent1);
+  --mpce-on-highlight: var(--mpce-background);
+  --mpce-figure-backing: #fff;
+  --mpce-layer0: var(--mpce-background);
+  --mpce-layer1: var(--mpce-dark1);
+  --mpce-layer2: var(--mpce-dark2);
+  --mpce-layer3: var(--mpce-dimmed5);
+  --mpce-layer4: var(--mpce-dimmed4);
+  --mpce-overlay-rgb: 41, 36, 42;
+  --mpce-scrollbar-rgb: 165, 159, 160; /* dimmed3 */
+  --mpce-backdrop: rgba(41, 36, 42, 0.3);
+}

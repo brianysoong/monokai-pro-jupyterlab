@@ -1,0 +1,11 @@
+/* -----------------------------------------------------------------------------
+| Monokai Pro (CE) for JupyterLab.
+|
+| One stylesheet serves both the dark and light variants: src/index.ts sets
+| `data-mpce-theme` on <html> and every rule is scoped to it.
+|---------------------------------------------------------------------------- */
+
+@import url('./palette.css');
+@import url('./variables.css');
+@import url('./syntax.css');
+@import url('./ui.css');

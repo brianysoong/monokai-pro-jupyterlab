@@ -1,0 +1,296 @@
+/* -----------------------------------------------------------------------------
+| Syntax highlighting.
+|
+| 1. --jp-mirror-editor-* variables drive JupyterLab's built-in highlighter,
+|    which is also used for static code blocks in rendered Markdown.
+| 2. .mpce-tok-* classes come from this extension's own highlighter
+|    (src/syntax.ts). It tags tokens more finely than JupyterLab does, which
+|    lets `def`/`class` (blue italic) differ from `if`/`return` (red), as in
+|    Monokai Pro. Its classes add to JupyterLab's on the same token span and
+|    win on specificity.
+| 3. .mpce-sem-* classes mark Python semantics no grammar tag covers:
+|    parameters, self/cls, keyword arguments, docstrings, decorators,
+|    base classes and builtin types.
+|
+| Token colors follow the official Monokai Pro scopes:
+|   comment ......... dimmed3 italic     keyword/operator .. accent1
+|   parameter ....... accent2 italic     string ............ accent3
+|   function ........ accent4            class/type ........ accent5
+|   constant/number . accent6            self/cls .......... dimmed1 italic
+|   punctuation ..... dimmed2            storage (def) ..... accent5 italic
+|---------------------------------------------------------------------------- */
+
+:root[data-mpce-theme] {
+  --jp-mirror-editor-keyword-color: var(--mpce-accent1);
+  --jp-mirror-editor-atom-color: var(--mpce-accent6);
+  --jp-mirror-editor-number-color: var(--mpce-accent6);
+  --jp-mirror-editor-def-color: var(--mpce-accent4);
+  --jp-mirror-editor-variable-color: var(--mpce-text);
+  --jp-mirror-editor-variable-2-color: var(--mpce-dimmed1);
+  --jp-mirror-editor-variable-3-color: var(--mpce-accent5);
+  --jp-mirror-editor-punctuation-color: var(--mpce-dimmed2);
+  --jp-mirror-editor-property-color: var(--mpce-text);
+  --jp-mirror-editor-operator-color: var(--mpce-accent1);
+  --jp-mirror-editor-comment-color: var(--mpce-dimmed3);
+  --jp-mirror-editor-string-color: var(--mpce-accent3);
+  --jp-mirror-editor-string-2-color: var(--mpce-accent3);
+  --jp-mirror-editor-meta-color: var(--mpce-accent4);
+  --jp-mirror-editor-qualifier-color: var(--mpce-accent5);
+  --jp-mirror-editor-builtin-color: var(--mpce-accent4);
+  --jp-mirror-editor-bracket-color: var(--mpce-dimmed2);
+  --jp-mirror-editor-tag-color: var(--mpce-accent1);
+  --jp-mirror-editor-attribute-color: var(--mpce-accent5);
+  --jp-mirror-editor-header-color: var(--mpce-accent3);
+  --jp-mirror-editor-quote-color: var(--mpce-dimmed1);
+  --jp-mirror-editor-link-color: var(--mpce-accent4);
+  --jp-mirror-editor-error-color: var(--mpce-accent1);
+  --jp-mirror-editor-hr-color: var(--mpce-dimmed3);
+
+  /* ANSI palette, shared by outputs and terminals (src/terminal.ts) */
+  --mpce-ansi-black: var(--mpce-dimmed5);
+  --mpce-ansi-red: var(--mpce-accent1);
+  --mpce-ansi-green: var(--mpce-accent4);
+  --mpce-ansi-yellow: var(--mpce-accent3);
+  --mpce-ansi-blue: var(--mpce-accent2);
+  --mpce-ansi-magenta: var(--mpce-accent6);
+  --mpce-ansi-cyan: var(--mpce-accent5);
+  --mpce-ansi-white: var(--mpce-text);
+  --mpce-ansi-bright-black: var(--mpce-dimmed3);
+}
+
+/* ---- Fine-grained tokens (src/syntax.ts) --------------------------------- */
+
+:root[data-mpce-theme] .mpce-tok-keyword,
+:root[data-mpce-theme] .mpce-tok-operator {
+  color: var(--mpce-accent1);
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root[data-mpce-theme] .mpce-tok-modifier {
+  color: var(--mpce-accent1);
+  font-weight: normal;
+  font-style: italic;
+}
+
+:root[data-mpce-theme] .mpce-tok-storage,
+:root[data-mpce-theme] .mpce-tok-type,
+:root[data-mpce-theme] .mpce-tok-attribute {
+  color: var(--mpce-accent5);
+  font-weight: normal;
+  font-style: italic;
+}
+
+:root[data-mpce-theme] .mpce-tok-class {
+  color: var(--mpce-accent5);
+}
+
+:root[data-mpce-theme] .mpce-tok-function,
+:root[data-mpce-theme] .cm-builtin .mpce-tok-variable {
+  color: var(--mpce-accent4);
+}
+
+:root[data-mpce-theme] .mpce-tok-string {
+  color: var(--mpce-accent3);
+}
+
+:root[data-mpce-theme] .mpce-tok-constant {
+  color: var(--mpce-accent6);
+  font-weight: normal;
+}
+
+:root[data-mpce-theme] .mpce-tok-variable {
+  color: var(--mpce-text);
+}
+
+:root[data-mpce-theme] .mpce-tok-self {
+  color: var(--mpce-dimmed1);
+  font-style: italic;
+}
+
+:root[data-mpce-theme] .mpce-tok-punctuation,
+:root[data-mpce-theme] .mpce-tok-meta,
+:root[data-mpce-theme] .mpce-tok-markup {
+  color: var(--mpce-dimmed2);
+}
+
+:root[data-mpce-theme] .mpce-tok-comment {
+  color: var(--mpce-dimmed3);
+  font-style: italic;
+}
+
+:root[data-mpce-theme] .mpce-tok-tag,
+:root[data-mpce-theme] .mpce-tok-invalid,
+:root[data-mpce-theme] .mpce-tok-deleted {
+  color: var(--mpce-accent1);
+}
+
+:root[data-mpce-theme] .mpce-tok-inserted {
+  color: var(--mpce-accent4);
+}
+
+:root[data-mpce-theme] .mpce-tok-changed {
+  color: var(--mpce-accent3);
+}
+
+/* Markdown (in Markdown cells and .md files) */
+:root[data-mpce-theme] .mpce-tok-heading {
+  color: var(--mpce-accent3);
+}
+
+:root[data-mpce-theme] .mpce-tok-link {
+  color: var(--mpce-accent1);
+  text-decoration: none;
+}
+
+:root[data-mpce-theme] .mpce-tok-url {
+  color: var(--mpce-accent4);
+}
+
+:root[data-mpce-theme] .mpce-tok-raw {
+  color: var(--mpce-accent2);
+}
+
+:root[data-mpce-theme] .mpce-tok-quote {
+  color: var(--mpce-dimmed1);
+  font-style: italic;
+}
+
+/* ---- Python semantics (src/syntax.ts) ------------------------------------
+   These marks render inside the token spans; the `*` variants keep them
+   winning should another extension change the nesting. */
+
+:root[data-mpce-theme] .mpce-sem-param,
+:root[data-mpce-theme] .mpce-sem-param * {
+  color: var(--mpce-accent2);
+  font-style: italic;
+}
+
+:root[data-mpce-theme] .mpce-sem-self,
+:root[data-mpce-theme] .mpce-sem-self * {
+  color: var(--mpce-dimmed1);
+  font-style: italic;
+}
+
+:root[data-mpce-theme] .mpce-sem-keyword,
+:root[data-mpce-theme] .mpce-sem-keyword * {
+  color: var(--mpce-accent1);
+  font-style: normal;
+}
+
+:root[data-mpce-theme] .mpce-sem-docstring,
+:root[data-mpce-theme] .mpce-sem-docstring * {
+  color: var(--mpce-dimmed3);
+}
+
+:root[data-mpce-theme] .mpce-sem-decorator,
+:root[data-mpce-theme] .mpce-sem-decorator * {
+  color: var(--mpce-accent4);
+}
+
+:root[data-mpce-theme] .mpce-sem-type,
+:root[data-mpce-theme] .mpce-sem-type *,
+:root[data-mpce-theme] .mpce-sem-inherited,
+:root[data-mpce-theme] .mpce-sem-inherited * {
+  color: var(--mpce-accent5);
+  font-style: italic;
+}
+
+/* ---- ANSI colors in outputs ---------------------------------------------
+   Same mapping as Monokai Pro's terminal palette, including its quirk of
+   rendering ANSI blue as orange. */
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-black-fg {
+  color: var(--mpce-ansi-black);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-red-fg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-red-intense-fg {
+  color: var(--mpce-ansi-red);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-green-fg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-green-intense-fg {
+  color: var(--mpce-ansi-green);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-yellow-fg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-yellow-intense-fg {
+  color: var(--mpce-ansi-yellow);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-blue-fg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-blue-intense-fg {
+  color: var(--mpce-ansi-blue);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-magenta-fg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-magenta-intense-fg {
+  color: var(--mpce-ansi-magenta);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-cyan-fg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-cyan-intense-fg {
+  color: var(--mpce-ansi-cyan);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-white-fg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-white-intense-fg {
+  color: var(--mpce-ansi-white);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-black-intense-fg {
+  color: var(--mpce-ansi-bright-black);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-black-bg {
+  background-color: var(--mpce-ansi-black);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-red-bg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-red-intense-bg {
+  background-color: var(--mpce-ansi-red);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-green-bg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-green-intense-bg {
+  background-color: var(--mpce-ansi-green);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-yellow-bg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-yellow-intense-bg {
+  background-color: var(--mpce-ansi-yellow);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-blue-bg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-blue-intense-bg {
+  background-color: var(--mpce-ansi-blue);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-magenta-bg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-magenta-intense-bg {
+  background-color: var(--mpce-ansi-magenta);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-cyan-bg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-cyan-intense-bg {
+  background-color: var(--mpce-ansi-cyan);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-white-bg,
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-white-intense-bg {
+  background-color: var(--mpce-ansi-white);
+}
+
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-black-intense-bg {
+  background-color: var(--mpce-ansi-bright-black);
+}
+
+/* Text on a colored ANSI background with no explicit foreground would
+   otherwise inherit the default text color and become illegible. */
+:root[data-mpce-theme]
+  .jp-RenderedText
+  pre
+  [class*='ansi-'][class*='-bg']:not([class*='-fg'], [class*='ansi-black']) {
+  color: var(--mpce-background);
+}

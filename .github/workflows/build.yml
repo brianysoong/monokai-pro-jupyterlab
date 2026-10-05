@@ -1,0 +1,72 @@
+name: Build
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: '*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Base Setup
+        uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+
+      - name: Install dependencies
+        run: python -m pip install -U "jupyterlab>=4.0.0,<5" "jupyter-builder>=1.2.0,<2"
+
+      - name: Lint
+        run: |
+          set -eux
+          jlpm
+          jlpm run lint:check
+
+      - name: Check the committed build matches the sources
+        run: |
+          set -eux
+          jlpm build:prod
+          git status --porcelain jupyterlab_monokai_pro_ce/labextension
+          if [ -n "$(git status --porcelain jupyterlab_monokai_pro_ce/labextension)" ]; then
+            echo "::error::jupyterlab_monokai_pro_ce/labextension is stale. Run 'jlpm build:prod' and commit the result."
+            git diff --stat jupyterlab_monokai_pro_ce/labextension
+            exit 1
+          fi
+
+  install:
+    # Install from source the way `pip install git+...` does, with no Node.js
+    # available, on the oldest and newest supported JupyterLab.
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        jupyterlab: ['4.0.*', '4.*']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Remove Node.js
+        run: |
+          sudo rm -rf "$(which node)"
+          sudo rm -rf "$(which node)" || true
+          ! command -v node
+
+      - name: Install
+        run: |
+          set -eux
+          pip install "jupyterlab==${{ matrix.jupyterlab }}" .
+          jupyter labextension list 2>&1 | grep -ie "jupyterlab-monokai-pro-ce.*OK"
+          python -m jupyterlab.browser_check
