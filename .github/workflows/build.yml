@@ -46,6 +46,16 @@ jobs:
             exit 1
           fi
 
+      - name: Smoke-test in a browser
+        # Loads JupyterLab with the extension and fails on console errors.
+        # Needs Node.js (to fetch Playwright), so it runs here rather than in
+        # the Node-free install jobs below.
+        run: |
+          set -eux
+          python -m pip install .
+          jupyter labextension list 2>&1 | grep -ie "jupyterlab-monokai-pro-ce.*OK"
+          python -m jupyterlab.browser_check
+
   install:
     # Install from source the way `pip install git+...` does, with no Node.js
     # available, on the oldest and newest supported JupyterLab.
@@ -75,4 +85,3 @@ jobs:
           set -eux
           pip install "jupyterlab==${{ matrix.jupyterlab }}" .
           jupyter labextension list 2>&1 | grep -ie "jupyterlab-monokai-pro-ce.*OK"
-          python -m jupyterlab.browser_check
