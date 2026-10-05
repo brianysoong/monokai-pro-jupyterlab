@@ -4,7 +4,7 @@
 
 | Path                  | What it holds                                                                                                                                    |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `style/palette.css`   | The official Monokai Pro and Monokai Pro Light palettes, plus semantic tokens (panel, highlight, layers). This is the only file with hex colors. |
+| `style/palette.css`   | The official Monokai Pro and Monokai Pro Light palettes, plus semantic tokens (panel, highlight, layers). All other files refer to these tokens. |
 | `style/variables.css` | Maps every JupyterLab `--jp-*` variable onto the palette. One mapping serves both variants.                                                      |
 | `style/syntax.css`    | Token colors for the editor and rendered Markdown, and ANSI colors.                                                                              |
 | `style/ui.css`        | Component refinements that variables can't express: tabs, the activity bar, selection, menus, dialogs and figures.                               |
