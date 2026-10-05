@@ -64,6 +64,7 @@
         "@jupyterlab/application": "^4.0.0",
         "@jupyterlab/apputils": "^4.0.0",
         "@jupyterlab/codemirror": "^4.0.0",
+        "@jupyterlab/notebook": "^4.0.0",
         "@jupyterlab/settingregistry": "^4.0.0",
         "@jupyterlab/terminal": "^4.0.0",
         "@lezer/common": "^1.0.0",
@@ -136,6 +137,11 @@
                 "requiredVersion": "^4.0.0"
             },
             "@jupyterlab/codemirror": {
+                "bundled": false,
+                "singleton": true,
+                "requiredVersion": "^4.0.0"
+            },
+            "@jupyterlab/notebook": {
                 "bundled": false,
                 "singleton": true,
                 "requiredVersion": "^4.0.0"

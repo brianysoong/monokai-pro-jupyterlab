@@ -8,12 +8,14 @@ import {
   IEditorExtensionRegistry,
   IEditorLanguageRegistry
 } from '@jupyterlab/codemirror';
+import { INotebookTracker } from '@jupyterlab/notebook';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { ITerminalTracker } from '@jupyterlab/terminal';
 
 // Small, and needed synchronously: editor extension factories cannot be async.
 // eslint-disable-next-line jupyter/prefer-lazy-imports
 import { extendStaticHighlighting, monokaiSyntax } from './syntax';
+import { enableGutterRunButtons } from './cells';
 import { refitShell } from './layout';
 import { themeTerminals } from './terminal';
 
@@ -44,6 +46,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     IEditorExtensionRegistry,
     IEditorLanguageRegistry,
     ITerminalTracker,
+    INotebookTracker,
     ISettingRegistry
   ],
   activate: (
@@ -52,6 +55,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     editorExtensions: IEditorExtensionRegistry | null,
     languages: IEditorLanguageRegistry | null,
     terminals: ITerminalTracker | null,
+    notebooks: INotebookTracker | null,
     settingRegistry: ISettingRegistry | null
   ) => {
     for (const { name, variant, isLight } of VARIANTS) {
@@ -83,6 +87,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
     }
     if (terminals) {
       themeTerminals(terminals);
+    }
+    if (notebooks) {
+      enableGutterRunButtons(notebooks);
     }
 
     root.dataset.mpceFigureBackground = 'white';

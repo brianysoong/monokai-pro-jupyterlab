@@ -1,4 +1,4 @@
-"use strict";(self.rspackChunkjupyterlab_monokai_pro_ce=self.rspackChunkjupyterlab_monokai_pro_ce||[]).push([[689],{758(a,r,o){var e=o(601),t=o.n(e),d=o(314),m=(o.n(d))()(t());m.push([a.id,`/* -----------------------------------------------------------------------------
+"use strict";(self.rspackChunkjupyterlab_monokai_pro_ce=self.rspackChunkjupyterlab_monokai_pro_ce||[]).push([[689],{758(r,a,o){var e=o(601),t=o.n(e),d=o(314),m=o.n(d),n=o(417),p=o.n(n),i=new URL(o(411),o.b),l=m()(t()),c=p()(i);l.push([r.id,`/* -----------------------------------------------------------------------------
 | Modern UI: the layout language of VS Code's modern workbench.
 |
 | Enabled by the \`modernUI\` setting, which sets \`data-mpce-modern\` on <html>.
@@ -46,6 +46,9 @@
   --mm-shadow-md: 0 0 6px rgba(0, 0, 0, 0.3);
   --mm-shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.36);
   --mm-shadow-xl: 0 0 20px rgba(0, 0, 0, 0.4);
+
+  /* Notebook gutter run button */
+  --mm-run-icon: url(${c});
 
   /* Taller tabs and rounder controls, as in VS Code */
   --jp-private-horizontal-tab-height: 30px;
@@ -427,4 +430,134 @@
 :root[data-mpce-modern] .jp-ToolbarButtonComponent {
   border-radius: var(--mm-radius-sm);
 }
-`,""]),o.d(r,{},{A:m})},314(a){a.exports=function(a){var r=[];return r.toString=function(){return this.map(function(r){var o="",e=void 0!==r[5];return r[4]&&(o+="@supports (".concat(r[4],") {")),r[2]&&(o+="@media ".concat(r[2]," {")),e&&(o+="@layer".concat(r[5].length>0?" ".concat(r[5]):""," {")),o+=a(r),e&&(o+="}"),r[2]&&(o+="}"),r[4]&&(o+="}"),o}).join("")},r.i=function(a,o,e,t,d){"string"==typeof a&&(a=[[null,a,void 0]]);var m={};if(e)for(var n=0;n<this.length;n++){var i=this[n][0];null!=i&&(m[i]=!0)}for(var p=0;p<a.length;p++){var c=[].concat(a[p]);e&&m[c[0]]||(void 0!==d&&(void 0===c[5]||(c[1]="@layer".concat(c[5].length>0?" ".concat(c[5]):""," {").concat(c[1],"}")),c[5]=d),o&&(c[2]&&(c[1]="@media ".concat(c[2]," {").concat(c[1],"}")),c[2]=o),t&&(c[4]?(c[1]="@supports (".concat(c[4],") {").concat(c[1],"}"),c[4]=t):c[4]="".concat(t)),r.push(c))}},r}},601(a){a.exports=function(a){return a[1]}},320(a,r,o){o.r(r);var e=o(72),t=o.n(e),d=o(825),m=o.n(d),n=o(659),i=o.n(n),p=o(56),c=o.n(p),s=o(540),l=o.n(s),b=o(113),u=o.n(b),v=o(758),h={};h.styleTagTransform=u(),h.setAttributes=c(),h.insert=i().bind(null,"head"),h.domAPI=m(),h.insertStyleElement=l(),t()(v.A,h);let g=v.A&&v.A.locals?v.A.locals:void 0;o.d(r,{},{default:g})},72(a){var r=[];function o(a){for(var o=-1,e=0;e<r.length;e++)if(r[e].identifier===a){o=e;break}return o}function e(a,e){for(var t={},d=[],m=0;m<a.length;m++){var n=a[m],i=e.base?n[0]+e.base:n[0],p=t[i]||0,c="".concat(i," ").concat(p);t[i]=p+1;var s=o(c),l={css:n[1],media:n[2],sourceMap:n[3],supports:n[4],layer:n[5]};if(-1!==s)r[s].references++,r[s].updater(l);else{var b=function(a,r){var o=r.domAPI(r);return o.update(a),function(r){r?(r.css!==a.css||r.media!==a.media||r.sourceMap!==a.sourceMap||r.supports!==a.supports||r.layer!==a.layer)&&o.update(a=r):o.remove()}}(l,e);e.byIndex=m,r.splice(m,0,{identifier:c,updater:b,references:1})}d.push(c)}return d}a.exports=function(a,t){var d=e(a=a||[],t=t||{});return function(a){a=a||[];for(var m=0;m<d.length;m++){var n=o(d[m]);r[n].references--}for(var i=e(a,t),p=0;p<d.length;p++){var c=o(d[p]);0===r[c].references&&(r[c].updater(),r.splice(c,1))}d=i}}},659(a){var r={};a.exports=function(a,o){var e=function(a){if(void 0===r[a]){var o=document.querySelector(a);if(window.HTMLIFrameElement&&o instanceof window.HTMLIFrameElement)try{o=o.contentDocument.head}catch(a){o=null}r[a]=o}return r[a]}(a);if(!e)throw Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");e.appendChild(o)}},540(a){a.exports=function(a){var r=document.createElement("style");return a.setAttributes(r,a.attributes),a.insert(r,a.options),r}},56(a,r,o){a.exports=function(a){var r=o.nc;r&&a.setAttribute("nonce",r)}},825(a){a.exports=function(a){if("u"<typeof document)return{update:function(){},remove:function(){}};var r=a.insertStyleElement(a);return{update:function(o){var e,t,d;e="",o.supports&&(e+="@supports (".concat(o.supports,") {")),o.media&&(e+="@media ".concat(o.media," {")),(t=void 0!==o.layer)&&(e+="@layer".concat(o.layer.length>0?" ".concat(o.layer):""," {")),e+=o.css,t&&(e+="}"),o.media&&(e+="}"),o.supports&&(e+="}"),(d=o.sourceMap)&&"u">typeof btoa&&(e+="\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(d))))," */")),a.styleTagTransform(e,r,a.options)},remove:function(){var a;null===(a=r).parentNode||a.parentNode.removeChild(a)}}}},113(a){a.exports=function(a,r){if(r.styleSheet)r.styleSheet.cssText=a;else{for(;r.firstChild;)r.removeChild(r.firstChild);r.appendChild(document.createTextNode(a))}}}}]);
+
+/* ---- Notebook cells ------------------------------------------------------
+   VS Code notebook cells: rounded editors with a hairline outline that
+   brightens while editing, a narrow gutter holding the run button and the
+   execution count, a slim pill marking the active cell, and a floating
+   cell toolbar. Outputs drop the Out[n] prompt, as VS Code does. */
+
+:root[data-mpce-modern] .jp-Notebook {
+  --jp-cell-prompt-width: 52px;
+  --mm-cell-radius: var(--mm-radius-md);
+  --mm-focus-ring: var(--mpce-dimmed3, var(--jp-border-color0));
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-InputArea-editor {
+  border-radius: var(--mm-cell-radius);
+  overflow: hidden;
+}
+
+/* Gutter: the run button sits above the execution count */
+:root[data-mpce-modern] .jp-Notebook .jp-InputPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 0 0;
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-CodeCell .jp-InputPrompt::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--mm-radius-sm);
+  background-color: var(--jp-ui-font-color1);
+  mask: var(--mm-run-icon) center / 16px 16px no-repeat;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-CodeCell:hover .jp-InputPrompt::before,
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-CodeCell.jp-mod-active
+  .jp-InputPrompt::before {
+  opacity: 1;
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-CodeCell
+  .jp-InputPrompt:hover::before {
+  background-color: var(--mm-active-fg);
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-OutputPrompt {
+  visibility: hidden;
+}
+
+/* Active-cell marker: a slim rounded pill instead of a filled column */
+:root[data-mpce-modern] .jp-Notebook .jp-Cell .jp-Collapser,
+:root[data-mpce-modern] .jp-Notebook .jp-Cell.jp-mod-active .jp-Collapser,
+:root[data-mpce-modern] .jp-Notebook .jp-Cell .jp-Collapser:hover,
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-Cell.jp-mod-active
+  .jp-Collapser:hover {
+  background: transparent;
+  box-shadow: none;
+  opacity: 1;
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-Collapser-child {
+  left: 3px;
+  width: 3px;
+  border-radius: var(--mm-radius-xs);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-Cell
+  .jp-Collapser:hover
+  .jp-Collapser-child {
+  background: var(--jp-border-color0);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-Cell.jp-mod-active
+  .jp-Collapser
+  .jp-Collapser-child {
+  background: var(--mm-active-fg);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-Cell.jp-mod-active.jp-mod-dirty
+  .jp-Collapser
+  .jp-Collapser-child {
+  background: var(--jp-warn-color1);
+}
+
+/* Command-mode focus and multi-selection read as rounded cards */
+:root[data-mpce-modern] .jp-Notebook .jp-Cell {
+  border-radius: var(--mm-radius-lg);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook.jp-mod-commandMode
+  .jp-Cell.jp-mod-active:focus-visible {
+  border-radius: var(--mm-radius-lg);
+  box-shadow: 0 0 0 1px var(--mm-focus-ring);
+}
+
+/* Floating cell toolbar */
+:root[data-mpce-modern] .jp-Notebook .jp-cell-toolbar {
+  padding: 0 2px;
+  background: var(--mpce-panel, var(--jp-layout-color1));
+  border: var(--jp-border-width) solid var(--mm-card-border);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-cell-toolbar
+  .jp-ToolbarButtonComponent {
+  border-radius: var(--mm-radius-sm);
+}
+`,""]),o.d(a,{},{A:l})},314(r){r.exports=function(r){var a=[];return a.toString=function(){return this.map(function(a){var o="",e=void 0!==a[5];return a[4]&&(o+="@supports (".concat(a[4],") {")),a[2]&&(o+="@media ".concat(a[2]," {")),e&&(o+="@layer".concat(a[5].length>0?" ".concat(a[5]):""," {")),o+=r(a),e&&(o+="}"),a[2]&&(o+="}"),a[4]&&(o+="}"),o}).join("")},a.i=function(r,o,e,t,d){"string"==typeof r&&(r=[[null,r,void 0]]);var m={};if(e)for(var n=0;n<this.length;n++){var p=this[n][0];null!=p&&(m[p]=!0)}for(var i=0;i<r.length;i++){var l=[].concat(r[i]);e&&m[l[0]]||(void 0!==d&&(void 0===l[5]||(l[1]="@layer".concat(l[5].length>0?" ".concat(l[5]):""," {").concat(l[1],"}")),l[5]=d),o&&(l[2]&&(l[1]="@media ".concat(l[2]," {").concat(l[1],"}")),l[2]=o),t&&(l[4]?(l[1]="@supports (".concat(l[4],") {").concat(l[1],"}"),l[4]=t):l[4]="".concat(t)),a.push(l))}},a}},417(r){r.exports=function(r,a){return(a||(a={}),r&&(r=String(r.__esModule?r.default:r),/^['"].*['"]$/.test(r)&&(r=r.slice(1,-1)),a.hash&&(r+=a.hash),/["'() \t\n]|(%20)/.test(r)||a.needQuotes))?'"'.concat(r.replace(/"/g,'\\"').replace(/\n/g,"\\n"),'"'):r}},601(r){r.exports=function(r){return r[1]}},320(r,a,o){o.r(a);var e=o(72),t=o.n(e),d=o(825),m=o.n(d),n=o(659),p=o.n(n),i=o(56),l=o.n(i),c=o(540),s=o.n(c),u=o(113),b=o.n(u),v=o(758),h={};h.styleTagTransform=b(),h.setAttributes=l(),h.insert=p().bind(null,"head"),h.domAPI=m(),h.insertStyleElement=s(),t()(v.A,h);let g=v.A&&v.A.locals?v.A.locals:void 0;o.d(a,{},{default:g})},72(r){var a=[];function o(r){for(var o=-1,e=0;e<a.length;e++)if(a[e].identifier===r){o=e;break}return o}function e(r,e){for(var t={},d=[],m=0;m<r.length;m++){var n=r[m],p=e.base?n[0]+e.base:n[0],i=t[p]||0,l="".concat(p," ").concat(i);t[p]=i+1;var c=o(l),s={css:n[1],media:n[2],sourceMap:n[3],supports:n[4],layer:n[5]};if(-1!==c)a[c].references++,a[c].updater(s);else{var u=function(r,a){var o=a.domAPI(a);return o.update(r),function(a){a?(a.css!==r.css||a.media!==r.media||a.sourceMap!==r.sourceMap||a.supports!==r.supports||a.layer!==r.layer)&&o.update(r=a):o.remove()}}(s,e);e.byIndex=m,a.splice(m,0,{identifier:l,updater:u,references:1})}d.push(l)}return d}r.exports=function(r,t){var d=e(r=r||[],t=t||{});return function(r){r=r||[];for(var m=0;m<d.length;m++){var n=o(d[m]);a[n].references--}for(var p=e(r,t),i=0;i<d.length;i++){var l=o(d[i]);0===a[l].references&&(a[l].updater(),a.splice(l,1))}d=p}}},659(r){var a={};r.exports=function(r,o){var e=function(r){if(void 0===a[r]){var o=document.querySelector(r);if(window.HTMLIFrameElement&&o instanceof window.HTMLIFrameElement)try{o=o.contentDocument.head}catch(r){o=null}a[r]=o}return a[r]}(r);if(!e)throw Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");e.appendChild(o)}},540(r){r.exports=function(r){var a=document.createElement("style");return r.setAttributes(a,r.attributes),r.insert(a,r.options),a}},56(r,a,o){r.exports=function(r){var a=o.nc;a&&r.setAttribute("nonce",a)}},825(r){r.exports=function(r){if("u"<typeof document)return{update:function(){},remove:function(){}};var a=r.insertStyleElement(r);return{update:function(o){var e,t,d;e="",o.supports&&(e+="@supports (".concat(o.supports,") {")),o.media&&(e+="@media ".concat(o.media," {")),(t=void 0!==o.layer)&&(e+="@layer".concat(o.layer.length>0?" ".concat(o.layer):""," {")),e+=o.css,t&&(e+="}"),o.media&&(e+="}"),o.supports&&(e+="}"),(d=o.sourceMap)&&"u">typeof btoa&&(e+="\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(d))))," */")),r.styleTagTransform(e,a,r.options)},remove:function(){var r;null===(r=a).parentNode||r.parentNode.removeChild(r)}}}},113(r){r.exports=function(r,a){if(a.styleSheet)a.styleSheet.cssText=r;else{for(;a.firstChild;)a.removeChild(a.firstChild);a.appendChild(document.createTextNode(r))}}},411(r){r.exports="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M5 3.2v9.6c0 .4.4.6.8.4l7.2-4.8a.5.5 0 0 0 0-.8L5.8 2.8c-.4-.2-.8 0-.8.4z%27/%3E%3C/svg%3E"}}]);

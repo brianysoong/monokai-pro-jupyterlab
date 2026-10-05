@@ -64,6 +64,7 @@
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",
     "@jupyterlab/codemirror": "^4.0.0",
+    "@jupyterlab/notebook": "^4.0.0",
     "@jupyterlab/settingregistry": "^4.0.0",
     "@jupyterlab/terminal": "^4.0.0",
     "@lezer/common": "^1.0.0",
@@ -140,6 +141,11 @@
         "singleton": true,
         "requiredVersion": "^4.0.0"
       },
+      "@jupyterlab/notebook": {
+        "bundled": false,
+        "singleton": true,
+        "requiredVersion": "^4.0.0"
+      },
       "@jupyterlab/settingregistry": {
         "bundled": false,
         "singleton": true,
@@ -172,7 +178,7 @@
       }
     },
     "_build": {
-      "load": "static/remoteEntry.41a99dabb3bbd548.js",
+      "load": "static/remoteEntry.aa94a86fbd1db252.js",
       "extension": "./extension",
       "style": "./style"
     }

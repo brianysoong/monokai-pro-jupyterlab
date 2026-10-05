@@ -47,6 +47,9 @@
   --mm-shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.36);
   --mm-shadow-xl: 0 0 20px rgba(0, 0, 0, 0.4);
 
+  /* Notebook gutter run button */
+  --mm-run-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5 3.2v9.6c0 .4.4.6.8.4l7.2-4.8a.5.5 0 0 0 0-.8L5.8 2.8c-.4-.2-.8 0-.8.4z'/%3E%3C/svg%3E");
+
   /* Taller tabs and rounder controls, as in VS Code */
   --jp-private-horizontal-tab-height: 30px;
   --jp-border-radius: var(--mm-radius-sm);
@@ -425,5 +428,135 @@
 :root[data-mpce-modern] select.jp-mod-styled,
 :root[data-mpce-modern] .jp-InputGroup input,
 :root[data-mpce-modern] .jp-ToolbarButtonComponent {
+  border-radius: var(--mm-radius-sm);
+}
+
+/* ---- Notebook cells ------------------------------------------------------
+   VS Code notebook cells: rounded editors with a hairline outline that
+   brightens while editing, a narrow gutter holding the run button and the
+   execution count, a slim pill marking the active cell, and a floating
+   cell toolbar. Outputs drop the Out[n] prompt, as VS Code does. */
+
+:root[data-mpce-modern] .jp-Notebook {
+  --jp-cell-prompt-width: 52px;
+  --mm-cell-radius: var(--mm-radius-md);
+  --mm-focus-ring: var(--mpce-dimmed3, var(--jp-border-color0));
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-InputArea-editor {
+  border-radius: var(--mm-cell-radius);
+  overflow: hidden;
+}
+
+/* Gutter: the run button sits above the execution count */
+:root[data-mpce-modern] .jp-Notebook .jp-InputPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 0 0;
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-CodeCell .jp-InputPrompt::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--mm-radius-sm);
+  background-color: var(--jp-ui-font-color1);
+  mask: var(--mm-run-icon) center / 16px 16px no-repeat;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-CodeCell:hover .jp-InputPrompt::before,
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-CodeCell.jp-mod-active
+  .jp-InputPrompt::before {
+  opacity: 1;
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-CodeCell
+  .jp-InputPrompt:hover::before {
+  background-color: var(--mm-active-fg);
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-OutputPrompt {
+  visibility: hidden;
+}
+
+/* Active-cell marker: a slim rounded pill instead of a filled column */
+:root[data-mpce-modern] .jp-Notebook .jp-Cell .jp-Collapser,
+:root[data-mpce-modern] .jp-Notebook .jp-Cell.jp-mod-active .jp-Collapser,
+:root[data-mpce-modern] .jp-Notebook .jp-Cell .jp-Collapser:hover,
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-Cell.jp-mod-active
+  .jp-Collapser:hover {
+  background: transparent;
+  box-shadow: none;
+  opacity: 1;
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-Collapser-child {
+  left: 3px;
+  width: 3px;
+  border-radius: var(--mm-radius-xs);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-Cell
+  .jp-Collapser:hover
+  .jp-Collapser-child {
+  background: var(--jp-border-color0);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-Cell.jp-mod-active
+  .jp-Collapser
+  .jp-Collapser-child {
+  background: var(--mm-active-fg);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-Cell.jp-mod-active.jp-mod-dirty
+  .jp-Collapser
+  .jp-Collapser-child {
+  background: var(--jp-warn-color1);
+}
+
+/* Command-mode focus and multi-selection read as rounded cards */
+:root[data-mpce-modern] .jp-Notebook .jp-Cell {
+  border-radius: var(--mm-radius-lg);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook.jp-mod-commandMode
+  .jp-Cell.jp-mod-active:focus-visible {
+  border-radius: var(--mm-radius-lg);
+  box-shadow: 0 0 0 1px var(--mm-focus-ring);
+}
+
+/* Floating cell toolbar */
+:root[data-mpce-modern] .jp-Notebook .jp-cell-toolbar {
+  padding: 0 2px;
+  background: var(--mpce-panel, var(--jp-layout-color1));
+  border: var(--jp-border-width) solid var(--mm-card-border);
+}
+
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-cell-toolbar
+  .jp-ToolbarButtonComponent {
   border-radius: var(--mm-radius-sm);
 }
