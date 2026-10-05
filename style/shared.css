@@ -1,0 +1,19 @@
+/* -----------------------------------------------------------------------------
+| Refinements shared by the Monokai themes and the Modern UI.
+|---------------------------------------------------------------------------- */
+
+/* Icon-to-label spacing. JupyterLab sets icons flush against their labels
+   and relies on whitespace inside its own icon artwork; Codicons (and good
+   practice) need real spacing. */
+:root:is([data-mpce-theme], [data-mpce-modern])
+  .jp-ToolbarButtonComponent:has(svg)
+  .jp-ToolbarButtonComponent-label {
+  margin-inline-start: 6px;
+}
+
+:root:is([data-mpce-theme], [data-mpce-modern])
+  .lm-AccordionPanel-titleCollapser,
+:root:is([data-mpce-theme], [data-mpce-modern]) .jp-Collapser-icon,
+:root:is([data-mpce-theme], [data-mpce-modern]) .jp-BreadCrumbs-home {
+  margin-inline-end: 4px;
+}

@@ -2,6 +2,10 @@
   "jupyter.lab.toolbars": {
     "TopBar": [
       {
+        "name": "mpce-menu-button",
+        "rank": 0
+      },
+      {
         "name": "mpce-command-center",
         "rank": 50
       },

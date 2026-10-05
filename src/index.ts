@@ -17,7 +17,12 @@ import { ITerminalTracker } from '@jupyterlab/terminal';
 // eslint-disable-next-line jupyter/prefer-lazy-imports
 import { extendStaticHighlighting, monokaiSyntax } from './syntax';
 import { enableGutterRunButtons } from './cells';
-import { CommandCenter, LayoutToggles } from './header';
+import {
+  CommandCenter,
+  LayoutToggles,
+  MenuButton,
+  TitleBarLayout
+} from './header';
 import { refitShell, routeTerminalsToPanel } from './layout';
 import { themeTerminals } from './terminal';
 
@@ -108,11 +113,19 @@ const plugin: JupyterFrontEndPlugin<void> = {
       if (labShell) {
         toolbars.addFactory(
           'TopBar',
+          'mpce-menu-button',
+          () => new MenuButton(app.commands, labShell)
+        );
+        toolbars.addFactory(
+          'TopBar',
           'mpce-layout-toggles',
           () => new LayoutToggles(app.commands, labShell)
         );
       }
     }
+
+    const titleBar = labShell ? new TitleBarLayout(labShell) : null;
+    void app.restored.then(() => titleBar?.refresh());
 
     let terminalsInPanel = true;
     if (labShell && terminals) {
@@ -134,6 +147,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         if (modern !== root.hasAttribute('data-mpce-modern')) {
           root.toggleAttribute('data-mpce-modern', modern);
           refitShell(app.shell);
+          titleBar?.refresh();
         }
         root.toggleAttribute(
           'data-mpce-codicons',

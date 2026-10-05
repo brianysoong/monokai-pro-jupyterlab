@@ -51,6 +51,7 @@
   --mm-search-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M10.4 11.1a5 5 0 1 1 .7-.7l3.75 3.75-.7.7zM6.5 10.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'/%3E%3C/svg%3E");
   --mm-side-on-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M2.5 2h11A1.5 1.5 0 0 1 15 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9A1.5 1.5 0 0 1 2.5 2zM7 3v10h6.5a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z'/%3E%3C/svg%3E");
   --mm-side-off-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M2.5 2h11A1.5 1.5 0 0 1 15 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9A1.5 1.5 0 0 1 2.5 2zM2.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5H6V3zM7 3v10h6.5a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z'/%3E%3C/svg%3E");
+  --mm-menu-icon: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg' fill='currentColor'%3E%3Cpath d='M2 3.5C2 3.22386 2.22386 3 2.5 3H13.5C13.7761 3 14 3.22386 14 3.5C14 3.77614 13.7761 4 13.5 4H2.5C2.22386 4 2 3.77614 2 3.5ZM2 7.5C2 7.22386 2.22386 7 2.5 7H13.5C13.7761 7 14 7.22386 14 7.5C14 7.77614 13.7761 8 13.5 8H2.5C2.22386 8 2 7.77614 2 7.5ZM2 11.5C2 11.2239 2.22386 11 2.5 11H13.5C13.7761 11 14 11.2239 14 11.5C14 11.7761 13.7761 12 13.5 12H2.5C2.22386 12 2 11.7761 2 11.5Z'/%3E%3C/svg%3E");
 
   /* Notebook gutter run button */
   --mm-run-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M5 3.2v9.6c0 .4.4.6.8.4l7.2-4.8a.5.5 0 0 0 0-.8L5.8 2.8c-.4-.2-.8 0-.8.4z'/%3E%3C/svg%3E");
@@ -75,6 +76,7 @@
 
 :root[data-mpce-modern] #jp-top-panel {
   min-height: 35px;
+  flex-wrap: nowrap;
   align-items: center;
   border-bottom: none;
 }
@@ -110,31 +112,97 @@
 }
 
 /* ---- Title bar ----------------------------------------------------------
-   35px tall like VS Code's, with a command center centered in the window
-   and side-panel toggles at the right (src/header.ts). */
+   35px tall like VS Code's: menus on the left, a command center and the
+   side-panel toggles (src/header.ts). It never wraps: TitleBarLayout picks
+   a mode for the command center (data-mpce-cc on the top panel) and folds
+   menus into the menu bar's "…" overflow menu as the window narrows. */
 
+.mpce-MenuButton,
 .mpce-CommandCenter,
 .mpce-LayoutToggles {
   display: none;
 }
 
-/* Let the command center center itself on the whole title bar */
+/* JupyterLab's toolbar styles would otherwise show these with the Modern
+   UI off */
+:root:not([data-mpce-modern])
+  #jp-top-bar
+  > :is(.mpce-MenuButton, .mpce-CommandCenter, .mpce-LayoutToggles) {
+  display: none;
+}
+
+:root[data-mpce-modern] #jp-menu-panel {
+  flex: 0 0 auto;
+}
+
+/* Compact menu: the menu bar folds into one button (VS Code's behavior in
+   narrow windows) */
+:root[data-mpce-modern]
+  #jp-top-panel:not([data-mpce-menu='compact'])
+  #jp-top-bar
+  > .mpce-MenuButton {
+  display: none;
+}
+
+:root[data-mpce-modern] [data-mpce-menu='compact'] #jp-menu-panel {
+  display: none;
+}
+
+:root[data-mpce-modern] [data-mpce-menu='compact'] .mpce-MenuButton {
+  display: block;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 24px;
+  margin: 0 4px 0 0;
+  border: none;
+  border-radius: var(--mm-radius-sm);
+  background: transparent;
+  color: var(--jp-ui-font-color1);
+  cursor: pointer;
+}
+
+:root[data-mpce-modern] .mpce-MenuButton::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  background-color: currentcolor;
+  mask: var(--mm-menu-icon) center / contain no-repeat;
+}
+
+:root[data-mpce-modern] .mpce-MenuButton:hover {
+  background: var(--mm-hover);
+}
+
+/* The top bar takes the rest of the row; static so a centered command
+   center can position itself against the whole title bar */
 :root[data-mpce-modern] #jp-top-bar {
   position: static;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+:root[data-mpce-modern] #jp-top-bar::part(positioning-region) {
+  flex-wrap: nowrap;
+}
+
+:root[data-mpce-modern] #jp-top-bar > .jp-Toolbar-spacer {
+  display: none;
 }
 
 :root[data-mpce-modern] .mpce-CommandCenter {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  width: clamp(200px, 32vw, 560px);
+  width: var(--mm-cc-width, 360px);
   height: 24px;
+  margin: 0 auto;
   padding: 0 8px;
+  overflow: hidden;
   border: var(--jp-border-width) solid
     color-mix(in srgb, var(--jp-border-color0) 45%, transparent);
   border-radius: var(--mm-radius-md);
@@ -145,13 +213,40 @@
   cursor: pointer;
 }
 
+:root[data-mpce-modern] [data-mpce-cc='centered'] .mpce-CommandCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+:root[data-mpce-modern] [data-mpce-cc='centered'] .mpce-LayoutToggles {
+  margin-left: auto;
+}
+
+:root[data-mpce-modern] [data-mpce-cc='icon'] .mpce-CommandCenter {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+:root[data-mpce-modern] [data-mpce-cc='icon'] .mpce-CommandCenter-label {
+  display: none;
+}
+
 :root[data-mpce-modern] .mpce-CommandCenter:hover {
   background: var(--mm-hover);
   border-color: color-mix(in srgb, var(--jp-border-color0) 80%, transparent);
   color: var(--jp-ui-font-color1);
 }
 
+:root[data-mpce-modern] .mpce-CommandCenter:focus-visible {
+  outline: 1px solid var(--jp-ui-font-color2);
+  outline-offset: -1px;
+}
+
 :root[data-mpce-modern] .mpce-CommandCenter-icon {
+  flex: 0 0 auto;
   width: 14px;
   height: 14px;
   background-color: currentcolor;
@@ -159,24 +254,19 @@
 }
 
 :root[data-mpce-modern] .mpce-CommandCenter-label {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* On narrow windows, flow after the menus instead of overlapping them */
-@media (width <= 1100px) {
-  :root[data-mpce-modern] .mpce-CommandCenter {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-    margin: 0 8px;
-  }
+:root[data-mpce-modern] [data-mpce-narrow] .mpce-LayoutToggles {
+  display: none;
 }
 
 :root[data-mpce-modern] .mpce-LayoutToggles {
   display: flex;
+  flex: 0 0 auto;
   gap: 2px;
   margin-right: var(--mm-gap);
 }

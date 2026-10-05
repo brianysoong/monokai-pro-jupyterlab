@@ -4,5 +4,6 @@
 | theme. The color themes live in index.css.
 |---------------------------------------------------------------------------- */
 
+@import url('./shared.css');
 @import url('./modern.css');
 @import url('./codicons.css');
