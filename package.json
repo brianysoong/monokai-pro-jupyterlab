@@ -67,7 +67,9 @@
         "@jupyterlab/settingregistry": "^4.0.0",
         "@jupyterlab/terminal": "^4.0.0",
         "@lezer/common": "^1.0.0",
-        "@lezer/highlight": "^1.0.0"
+        "@lezer/highlight": "^1.0.0",
+        "@lumino/messaging": "^2.0.0",
+        "@lumino/widgets": "^2.0.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.0.0",
@@ -157,6 +159,16 @@
                 "bundled": false,
                 "singleton": true,
                 "requiredVersion": "^1.0.0"
+            },
+            "@lumino/messaging": {
+                "bundled": false,
+                "singleton": true,
+                "requiredVersion": "^2.0.0"
+            },
+            "@lumino/widgets": {
+                "bundled": false,
+                "singleton": true,
+                "requiredVersion": "^2.0.0"
             }
         }
     },
@@ -193,5 +205,6 @@
             "color-function-notation": null,
             "no-descending-specificity": null
         }
-    }
+    },
+    "style": "style/modern.css"
 }

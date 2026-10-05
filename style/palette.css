@@ -36,6 +36,11 @@
   --mpce-highlight: var(--mpce-accent3); /* active tab, active cell, links */
   --mpce-on-highlight: var(--mpce-background);
   --mpce-figure-backing: #fff;
+  --mpce-card-border: color-mix(
+    in srgb,
+    var(--mpce-dimmed5) 60%,
+    var(--mpce-dark1)
+  );
 
   /* Surface layers, in JupyterLab's --jp-layout-color0..4 order */
   --mpce-layer0: var(--mpce-background);
@@ -77,6 +82,7 @@
   --mpce-highlight: var(--mpce-accent1);
   --mpce-on-highlight: var(--mpce-background);
   --mpce-figure-backing: #fff;
+  --mpce-card-border: var(--mpce-dimmed5);
   --mpce-layer0: var(--mpce-background);
   --mpce-layer1: var(--mpce-dark1);
   --mpce-layer2: var(--mpce-dark2);

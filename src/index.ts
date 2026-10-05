@@ -14,6 +14,7 @@ import { ITerminalTracker } from '@jupyterlab/terminal';
 // Small, and needed synchronously: editor extension factories cannot be async.
 // eslint-disable-next-line jupyter/prefer-lazy-imports
 import { extendStaticHighlighting, monokaiSyntax } from './syntax';
+import { refitShell } from './layout';
 import { themeTerminals } from './terminal';
 
 const PLUGIN_ID = 'jupyterlab-monokai-pro-ce:plugin';
@@ -32,7 +33,7 @@ const root = document.documentElement;
  * Registers the Monokai Pro (CE) dark and light themes, the editor
  * extension and Markdown code-block highlighting that enable
  * Monokai-accurate token colors, terminal ANSI colors, and the
- * figure-background setting.
+ * figure-background and Modern UI settings.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
   id: PLUGIN_ID,
@@ -87,8 +88,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
     root.dataset.mpceFigureBackground = 'white';
     if (settingRegistry) {
       const apply = (settings: ISettingRegistry.ISettings) => {
-        root.dataset.mpceFigureBackground = settings.composite
-          .figureBackground as string;
+        const { figureBackground, modernUI } = settings.composite;
+        root.dataset.mpceFigureBackground = figureBackground as string;
+        const modern = modernUI === true;
+        if (modern !== root.hasAttribute('data-mpce-modern')) {
+          root.toggleAttribute('data-mpce-modern', modern);
+          refitShell(app.shell);
+        }
       };
       settingRegistry
         .load(PLUGIN_ID)

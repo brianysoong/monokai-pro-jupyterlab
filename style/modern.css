@@ -1,0 +1,429 @@
+/* -----------------------------------------------------------------------------
+| Modern UI: the layout language of VS Code's modern workbench.
+|
+| Enabled by the `modernUI` setting, which sets `data-mpce-modern` on <html>.
+| Unlike the color themes, this stylesheet is always loaded, and it only uses
+| JupyterLab's --jp-* variables, so it works on any theme. Monokai Pro
+| supplies a few --mpce-* refinements (window, activity bar and card-border
+| colors); every one of them has a generic fallback.
+|
+| Measurements follow VS Code 1.140's modern UI: cards with a 4px gutter, an
+| 8px card radius, 4px item radius, and a 1px soft card border.
+|---------------------------------------------------------------------------- */
+
+:root[data-mpce-modern] {
+  --mm-gap: 4px;
+  --mm-radius-xs: 2px;
+  --mm-radius-sm: 4px;
+  --mm-radius-md: 6px;
+  --mm-radius-lg: 8px;
+
+  /* Surfaces */
+  --mm-window: var(
+    --mpce-dark1,
+    color-mix(
+      in srgb,
+      var(--jp-layout-color0) 94%,
+      var(--jp-inverse-layout-color0)
+    )
+  );
+  --mm-activity: var(--mpce-dark2, var(--mm-window));
+  --mm-sidebar: var(--mpce-dark1, var(--jp-layout-color1));
+  --mm-editor: var(--jp-layout-color0);
+  --mm-tab-strip: var(--mm-window);
+  --mm-card-border: var(
+    --mpce-card-border,
+    color-mix(in srgb, var(--jp-border-color1) 70%, transparent)
+  );
+
+  /* Interaction washes */
+  --mm-hover: color-mix(in srgb, var(--jp-ui-font-color0) 6%, transparent);
+  --mm-selected: color-mix(in srgb, var(--jp-ui-font-color0) 9%, transparent);
+  --mm-active-fg: var(--mpce-highlight, var(--jp-ui-font-color0));
+
+  /* Elevation */
+  --mm-shadow-sm: 0 0 4px rgba(0, 0, 0, 0.24);
+  --mm-shadow-md: 0 0 6px rgba(0, 0, 0, 0.3);
+  --mm-shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.36);
+  --mm-shadow-xl: 0 0 20px rgba(0, 0, 0, 0.4);
+
+  /* Taller tabs and rounder controls, as in VS Code */
+  --jp-private-horizontal-tab-height: 30px;
+  --jp-border-radius: var(--mm-radius-sm);
+}
+
+/* ---- Window and gutters --------------------------------------------------
+   Lumino's layouts subtract container padding, so padding the containers
+   opens real gutters between the cards. */
+
+:root[data-mpce-modern] body,
+:root[data-mpce-modern] .jp-LabShell,
+:root[data-mpce-modern] #jp-top-panel,
+:root[data-mpce-modern] #jp-menu-panel,
+:root[data-mpce-modern] #jp-top-bar,
+:root[data-mpce-modern] .lm-MenuBar {
+  background: var(--mm-window);
+}
+
+:root[data-mpce-modern] #jp-top-panel {
+  border-bottom: none;
+}
+
+:root[data-mpce-modern] #jp-main-content-panel {
+  padding: 0 var(--mm-gap) var(--mm-gap);
+  background: var(--mm-window);
+}
+
+:root[data-mpce-modern] #jp-main-dock-panel {
+  /* Lumino's DockLayout swaps top and left padding, so the dock gets none;
+     the gutters live on the side stacks and the split panel instead */
+  padding: 0;
+}
+
+/* With a side panel collapsed, keep a gutter between the activity bar and
+   the editor */
+:root[data-mpce-modern]
+  #jp-main-content-panel:has(#jp-left-stack.lm-mod-hidden)
+  #jp-main-vsplit-panel {
+  padding-left: var(--mm-gap);
+}
+
+:root[data-mpce-modern]
+  #jp-main-content-panel:has(#jp-right-stack.lm-mod-hidden)
+  #jp-main-vsplit-panel {
+  padding-right: var(--mm-gap);
+}
+
+:root[data-mpce-modern] .lm-SplitPanel-handle,
+:root[data-mpce-modern] .lm-DockPanel-handle {
+  background: transparent;
+}
+
+/* ---- Side cards ----------------------------------------------------------
+   The activity bar and its open panel form one card, as in VS Code: the
+   activity bar is the card's darker leading edge. */
+
+:root[data-mpce-modern] .jp-SideBar.lm-TabBar {
+  background: var(--mm-activity);
+  border: var(--jp-border-width) solid var(--mm-card-border);
+}
+
+:root[data-mpce-modern] .jp-SideBar.lm-TabBar::after {
+  display: none;
+}
+
+:root[data-mpce-modern] .jp-SideBar.jp-mod-left {
+  border-right: none;
+  border-radius: var(--mm-radius-lg) 0 0 var(--mm-radius-lg);
+}
+
+:root[data-mpce-modern] .jp-SideBar.jp-mod-right {
+  border-left: none;
+  border-radius: 0 var(--mm-radius-lg) var(--mm-radius-lg) 0;
+}
+
+:root[data-mpce-modern] #jp-left-stack,
+:root[data-mpce-modern] #jp-right-stack {
+  background: transparent;
+  border: none;
+}
+
+/* The stack's padding is the gutter; its visible child is the card */
+:root[data-mpce-modern] #jp-left-stack {
+  /* the split handle adds a pixel to the gutter */
+  padding-right: calc(var(--mm-gap) - var(--jp-border-width));
+}
+
+:root[data-mpce-modern] #jp-right-stack {
+  padding-left: calc(var(--mm-gap) - var(--jp-border-width));
+}
+
+:root[data-mpce-modern] #jp-left-stack > .lm-Widget,
+:root[data-mpce-modern] #jp-right-stack > .lm-Widget {
+  border: var(--jp-border-width) solid var(--mm-card-border);
+}
+
+:root[data-mpce-modern] #jp-left-stack > .lm-Widget {
+  border-left: none;
+  border-radius: 0 var(--mm-radius-lg) var(--mm-radius-lg) 0;
+}
+
+:root[data-mpce-modern] #jp-right-stack > .lm-Widget {
+  border-right: none;
+  border-radius: var(--mm-radius-lg) 0 0 var(--mm-radius-lg);
+}
+
+/* A collapsed side panel leaves the activity bar as a card of its own */
+:root[data-mpce-modern]
+  #jp-main-content-panel:has(#jp-left-stack.lm-mod-hidden)
+  .jp-SideBar.jp-mod-left,
+:root[data-mpce-modern]
+  #jp-main-content-panel:has(#jp-right-stack.lm-mod-hidden)
+  .jp-SideBar.jp-mod-right {
+  border: var(--jp-border-width) solid var(--mm-card-border);
+  border-radius: var(--mm-radius-lg);
+}
+
+:root[data-mpce-modern] #jp-left-stack > .lm-Widget,
+:root[data-mpce-modern] #jp-right-stack > .lm-Widget,
+:root[data-mpce-modern] .jp-SidePanel,
+:root[data-mpce-modern] .jp-SidePanel .jp-Toolbar {
+  background: var(--mm-sidebar);
+}
+
+:root[data-mpce-modern] .jp-SidePanel-header,
+:root[data-mpce-modern] .jp-SidePanel .jp-Toolbar {
+  border-bottom: none;
+}
+
+/* Activity bar items: a rounded wash behind the current icon, no edge bar */
+:root[data-mpce-modern] .jp-SideBar .lm-TabBar-tab,
+:root[data-mpce-modern] .jp-SideBar .lm-TabBar-tab:not(.lm-mod-current),
+:root[data-mpce-modern] .jp-SideBar .lm-TabBar-tab:hover:not(.lm-mod-current),
+:root[data-mpce-modern] .jp-SideBar .lm-TabBar-tab.lm-mod-current {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+:root[data-mpce-modern] .jp-SideBar .lm-TabBar-tab.lm-mod-current::after {
+  display: none;
+}
+
+:root[data-mpce-modern] .jp-SideBar .lm-TabBar-tabIcon {
+  border-radius: var(--mm-radius-sm);
+  padding: 4px;
+}
+
+:root[data-mpce-modern]
+  .jp-SideBar
+  .lm-TabBar-tab.lm-mod-current
+  .lm-TabBar-tabIcon {
+  background: var(--mm-selected);
+}
+
+/* ---- Editor cards --------------------------------------------------------
+   Each dock area is a card: its tab strip on top, the document below. */
+
+:root[data-mpce-modern] .lm-DockPanel-tabBar {
+  background: var(--mm-tab-strip);
+  border: var(--jp-border-width) solid var(--mm-card-border);
+  border-bottom: none;
+  border-radius: var(--mm-radius-lg) var(--mm-radius-lg) 0 0;
+  overflow: hidden;
+}
+
+:root[data-mpce-modern] .lm-DockPanel-widget {
+  background: var(--mm-editor);
+  border: var(--jp-border-width) solid var(--mm-card-border);
+  border-top: none;
+  border-radius: 0 0 var(--mm-radius-lg) var(--mm-radius-lg);
+}
+
+/* Tabs: no outlines; the current tab is a raised shape that joins the
+   document below it */
+:root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-content,
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-content {
+  padding: 0 var(--mm-gap);
+  align-items: flex-end;
+}
+
+:root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-tab,
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab {
+  /* size to the title, as VS Code does */
+  flex: 0 1 auto;
+  max-width: 240px;
+  padding: 0 6px 0 10px;
+}
+
+:root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-tab,
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab,
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-addButton {
+  background: transparent;
+  border: none;
+  margin: 0;
+  border-radius: var(--mm-radius-md) var(--mm-radius-md) 0 0;
+  color: var(--jp-ui-font-color2);
+}
+
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab::before,
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab::after,
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-addButton::after {
+  display: none;
+}
+
+:root[data-mpce-modern]
+  #jp-down-stack
+  > .lm-TabBar
+  .lm-TabBar-tab:hover:not(.lm-mod-current),
+:root[data-mpce-modern]
+  .lm-DockPanel-tabBar
+  .lm-TabBar-tab:hover:not(.lm-mod-current) {
+  background: var(--mm-hover);
+  color: var(--jp-ui-font-color0);
+}
+
+:root[data-mpce-modern]
+  #jp-down-stack
+  > .lm-TabBar
+  .lm-TabBar-tab.lm-mod-current,
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab.lm-mod-current {
+  background: var(--mm-editor);
+  color: var(--jp-ui-font-color1);
+}
+
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab.jp-mod-current {
+  color: var(--mm-active-fg);
+}
+
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-addButton {
+  border-radius: var(--mm-radius-sm);
+  margin: 0 0 3px 2px;
+}
+
+:root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-addButton:hover {
+  background: var(--mm-hover);
+}
+
+/* Document toolbars sit inside the card, flat */
+:root[data-mpce-modern] .jp-MainAreaWidget > .jp-Toolbar {
+  background: var(--mm-editor);
+  border-bottom: none;
+  box-shadow: none;
+}
+
+/* ---- Bottom panel --------------------------------------------------------
+   The down area (terminals, logs) is a card like the editor. */
+
+:root[data-mpce-modern] #jp-down-stack {
+  padding-top: var(--mm-gap);
+  border: none;
+  background: var(--mm-window);
+}
+
+:root[data-mpce-modern] #jp-down-stack > .lm-TabBar {
+  background: var(--mm-tab-strip);
+  border: var(--jp-border-width) solid var(--mm-card-border);
+  border-bottom: none;
+  border-radius: var(--mm-radius-lg) var(--mm-radius-lg) 0 0;
+}
+
+:root[data-mpce-modern] #jp-down-stack > .lm-TabPanel-stackedPanel {
+  background: var(--mm-editor);
+  border: var(--jp-border-width) solid var(--mm-card-border);
+  border-top: none;
+  border-radius: 0 0 var(--mm-radius-lg) var(--mm-radius-lg);
+}
+
+/* ---- Status bar: flat on the window ------------------------------------- */
+
+:root[data-mpce-modern] .jp-StatusBar-Widget {
+  background: var(--mm-window);
+  border-top: none;
+}
+
+/* ---- Lists ---------------------------------------------------------------
+   Rows are inset and rounded, so selection reads as a pill. */
+
+:root[data-mpce-modern] .jp-DirListing-content {
+  padding: 2px var(--mm-gap);
+}
+
+:root[data-mpce-modern] .jp-DirListing-item {
+  border-radius: var(--mm-radius-sm);
+}
+
+:root[data-mpce-modern] .jp-DirListing-header {
+  border-top: none;
+  border-bottom: none;
+  background: transparent;
+}
+
+/* ---- Floating surfaces ---------------------------------------------------
+   Menus, the command palette, dialogs and editor widgets float as rounded
+   panels with soft shadows; their rows are inset pills. */
+
+:root[data-mpce-modern] .lm-Menu {
+  padding: var(--mm-gap);
+  border: var(--jp-border-width) solid var(--mm-card-border);
+  border-radius: var(--mm-radius-lg);
+  box-shadow: var(--mm-shadow-lg);
+}
+
+:root[data-mpce-modern] .lm-Menu-item {
+  border-radius: var(--mm-radius-sm);
+}
+
+/* Drop-down menus float just below the menu bar rather than hanging from it */
+:root[data-mpce-modern] .lm-MenuBar-menu.jp-ThemedContainer {
+  margin-top: var(--mm-gap);
+}
+
+:root[data-mpce-modern] .lm-MenuBar-item {
+  border: none;
+  border-radius: var(--mm-radius-sm);
+}
+
+:root[data-mpce-modern]
+  .lm-MenuBar.lm-mod-active
+  .lm-MenuBar-item.lm-mod-active {
+  border: none;
+}
+
+:root[data-mpce-modern] .jp-ModalCommandPalette.jp-ThemedContainer {
+  padding: var(--mm-gap);
+  border: var(--jp-border-width) solid var(--mm-card-border);
+  border-radius: var(--mm-radius-lg);
+  box-shadow: var(--mm-shadow-xl);
+  overflow: hidden;
+}
+
+:root[data-mpce-modern] .lm-CommandPalette-wrapper {
+  border-radius: var(--mm-radius-md);
+}
+
+:root[data-mpce-modern] .lm-CommandPalette-content {
+  padding: 0 var(--mm-gap);
+}
+
+:root[data-mpce-modern] .lm-CommandPalette-item,
+:root[data-mpce-modern] .lm-CommandPalette-header {
+  border-radius: var(--mm-radius-sm);
+}
+
+:root[data-mpce-modern] .lm-CommandPalette-header {
+  border-bottom: none;
+}
+
+:root[data-mpce-modern] .jp-Dialog-content {
+  border: var(--jp-border-width) solid var(--mm-card-border);
+  border-radius: var(--mm-radius-lg);
+  box-shadow: var(--mm-shadow-xl);
+}
+
+:root[data-mpce-modern] .jp-Completer,
+:root[data-mpce-modern] .jp-Tooltip,
+:root[data-mpce-modern] .jp-Notebook-cell .jp-Toolbar.jp-cell-toolbar,
+:root[data-mpce-modern] .jp-toast {
+  border-radius: var(--mm-radius-md);
+  box-shadow: var(--mm-shadow-md);
+}
+
+:root[data-mpce-modern] .jp-Completer {
+  padding: var(--mm-gap);
+}
+
+:root[data-mpce-modern] .jp-Completer-item {
+  border-radius: var(--mm-radius-sm);
+}
+
+/* ---- Controls ------------------------------------------------------------ */
+
+:root[data-mpce-modern] button.jp-mod-styled,
+:root[data-mpce-modern] .jp-Dialog-button,
+:root[data-mpce-modern] input.jp-mod-styled,
+:root[data-mpce-modern] select.jp-mod-styled,
+:root[data-mpce-modern] .jp-InputGroup input,
+:root[data-mpce-modern] .jp-ToolbarButtonComponent {
+  border-radius: var(--mm-radius-sm);
+}

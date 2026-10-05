@@ -50,84 +50,102 @@
 
 /* ---- Shell: title bar, activity bar, status bar --------------------------
    Same layering as Monokai Pro for VS Code: the menu bar and side panels on
-   dark1, the activity bar on dark2, documents on the editor background. */
+   dark1, the activity bar on dark2, documents on the editor background.
+   The shell, tab and toolbar rules below are the classic layout; with the
+   Modern UI on, style/modern.css lays these parts out instead. */
 
-:root[data-mpce-theme] body,
-:root[data-mpce-theme] .jp-LabShell {
+:root[data-mpce-theme]:not([data-mpce-modern]) body,
+:root[data-mpce-theme]:not([data-mpce-modern]) .jp-LabShell {
   background: var(--mpce-dark1);
 }
 
-:root[data-mpce-theme] #jp-top-panel,
-:root[data-mpce-theme]
+:root[data-mpce-theme]:not([data-mpce-modern]) #jp-top-panel,
+:root[data-mpce-theme]:not([data-mpce-modern])
   .jp-LabShell[data-shell-mode='single-document']
   #jp-menu-panel {
   border-bottom-color: var(--jp-border-color2);
 }
 
-:root[data-mpce-theme] .jp-SideBar.lm-TabBar,
-:root[data-mpce-theme] .jp-SideBar .lm-TabBar-tab:not(.lm-mod-current),
-:root[data-mpce-theme] .jp-SideBar .lm-TabBar-tab:hover:not(.lm-mod-current) {
+:root[data-mpce-theme]:not([data-mpce-modern]) .jp-SideBar.lm-TabBar,
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-SideBar
+  .lm-TabBar-tab:not(.lm-mod-current),
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-SideBar
+  .lm-TabBar-tab:hover:not(.lm-mod-current) {
   background: var(--mpce-dark2);
 }
 
-:root[data-mpce-theme] .jp-SideBar.lm-TabBar .lm-TabBar-tab + .lm-TabBar-tab,
-:root[data-mpce-theme]
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-SideBar.lm-TabBar
+  .lm-TabBar-tab
+  + .lm-TabBar-tab,
+:root[data-mpce-theme]:not([data-mpce-modern])
   .jp-SideBar.lm-TabBar
   .lm-TabBar-tab.lm-mod-current
   + .lm-TabBar-tab,
-:root[data-mpce-theme]
+:root[data-mpce-theme]:not([data-mpce-modern])
   .jp-SideBar.lm-TabBar
   .lm-TabBar-tab
   + .lm-TabBar-tab.lm-mod-current {
   border-top-color: var(--mpce-dark2);
 }
 
-:root[data-mpce-theme]
+:root[data-mpce-theme]:not([data-mpce-modern])
   .jp-SideBar.lm-TabBar
   .lm-TabBar-tab.lm-mod-current:last-child {
   border-bottom-color: var(--mpce-dark2);
 }
 
-:root[data-mpce-theme] .jp-SideBar.lm-TabBar.jp-mod-left::after,
-:root[data-mpce-theme] .jp-SideBar.lm-TabBar.jp-mod-right::after {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-SideBar.lm-TabBar.jp-mod-left::after,
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-SideBar.lm-TabBar.jp-mod-right::after {
   border-color: var(--jp-border-color2);
 }
 
 /* Activity bar icons: dim when inactive, bright when current, with the
    highlight as an edge marker */
-:root[data-mpce-theme]
+:root[data-mpce-theme]:not([data-mpce-modern])
   .jp-SideBar
   .lm-TabBar-tab:not(.lm-mod-current)
   .jp-icon3[fill] {
   fill: var(--mpce-dimmed3);
 }
 
-:root[data-mpce-theme] .jp-SideBar .lm-TabBar-tab:hover .jp-icon3[fill] {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-SideBar
+  .lm-TabBar-tab:hover
+  .jp-icon3[fill] {
   fill: var(--mpce-dimmed1);
 }
 
-:root[data-mpce-theme]
+:root[data-mpce-theme]:not([data-mpce-modern])
   .jp-SideBar
   .lm-TabBar-tab.lm-mod-current
   .jp-icon3[fill] {
   fill: var(--mpce-text);
 }
 
-:root[data-mpce-theme] .jp-SideBar.jp-mod-left .lm-TabBar-tab.lm-mod-current {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-SideBar.jp-mod-left
+  .lm-TabBar-tab.lm-mod-current {
   box-shadow: inset 2px 0 0 var(--mpce-highlight);
 }
 
-:root[data-mpce-theme] .jp-SideBar.jp-mod-right .lm-TabBar-tab.lm-mod-current {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-SideBar.jp-mod-right
+  .lm-TabBar-tab.lm-mod-current {
   box-shadow: inset -2px 0 0 var(--mpce-highlight);
 }
 
-:root[data-mpce-theme] .jp-StatusBar-Widget {
+:root[data-mpce-theme]:not([data-mpce-modern]) .jp-StatusBar-Widget {
   background: var(--mpce-dark1);
   border-top: var(--jp-border-width) solid var(--jp-border-color2);
 }
 
-:root[data-mpce-theme] .jp-StatusBar-Item,
-:root[data-mpce-theme] .jp-StatusBar-TextItem {
+:root[data-mpce-theme]:not([data-mpce-modern]) .jp-StatusBar-Item,
+:root[data-mpce-theme]:not([data-mpce-modern]) .jp-StatusBar-TextItem {
   color: var(--mpce-dimmed2);
 }
 
@@ -135,43 +153,57 @@
    The current tab joins the document below it and takes the highlight
    color, as Monokai Pro's editor tabs do. */
 
-:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab,
-:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-addButton {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .lm-DockPanel-tabBar
+  .lm-TabBar-tab,
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .lm-DockPanel-tabBar
+  .lm-TabBar-addButton {
   background: var(--mpce-dark1);
   color: var(--mpce-dimmed2);
 }
 
-:root[data-mpce-theme]
+:root[data-mpce-theme]:not([data-mpce-modern])
   .lm-DockPanel-tabBar
   .lm-TabBar-tab:hover:not(.lm-mod-current) {
   background: var(--mpce-dark1);
   color: var(--mpce-text);
 }
 
-:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab.lm-mod-current {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .lm-DockPanel-tabBar
+  .lm-TabBar-tab.lm-mod-current {
   background: var(--mpce-background);
   color: var(--mpce-dimmed1);
 }
 
-:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab.jp-mod-current {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .lm-DockPanel-tabBar
+  .lm-TabBar-tab.jp-mod-current {
   color: var(--mpce-highlight);
 }
 
-:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab,
-:root[data-mpce-theme] .lm-DockPanel-tabBar .lm-TabBar-tab::after {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .lm-DockPanel-tabBar
+  .lm-TabBar-tab,
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .lm-DockPanel-tabBar
+  .lm-TabBar-tab::after {
   border-color: var(--jp-border-color2);
 }
 
 /* Frame documents with the same dark groove used for other separators,
    rather than a light outline */
-:root[data-mpce-theme] .lm-DockPanel-widget,
-:root[data-mpce-theme] .lm-TabPanel-stackedPanel {
+:root[data-mpce-theme]:not([data-mpce-modern]) .lm-DockPanel-widget,
+:root[data-mpce-theme]:not([data-mpce-modern]) .lm-TabPanel-stackedPanel {
   border-color: var(--jp-border-color2);
 }
 
 /* Document toolbars sit on the editor background, side-panel toolbars keep
    the panel color */
-:root[data-mpce-theme] .jp-MainAreaWidget > .jp-Toolbar {
+:root[data-mpce-theme]:not([data-mpce-modern])
+  .jp-MainAreaWidget
+  > .jp-Toolbar {
   background: var(--mpce-background);
 }
 

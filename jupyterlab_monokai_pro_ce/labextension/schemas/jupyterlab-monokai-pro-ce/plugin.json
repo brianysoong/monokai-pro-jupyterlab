@@ -3,14 +3,29 @@
   "description": "Settings for the Monokai Pro (CE) themes.",
   "type": "object",
   "properties": {
+    "modernUI": {
+      "title": "Modern UI",
+      "description": "Restyle JupyterLab's layout after VS Code's modern workbench: floating rounded cards, connected tabs, floating menus and pill-shaped selections. Works with any theme.",
+      "type": "boolean",
+      "default": false
+    },
     "figureBackground": {
       "title": "Figure background (dark theme)",
       "description": "Plots with a transparent background and dark text are unreadable on a dark theme. 'White' backs every image output and the image viewer with white, as on paper. 'Auto' backs only figures that declare they need it (matplotlib's inline backend does this for transparent figures with dark labels). 'None' never adds a backing.",
       "type": "string",
       "oneOf": [
-        { "const": "white", "title": "White (all images)" },
-        { "const": "auto", "title": "Auto (figures that ask for it)" },
-        { "const": "none", "title": "None" }
+        {
+          "const": "white",
+          "title": "White (all images)"
+        },
+        {
+          "const": "auto",
+          "title": "Auto (figures that ask for it)"
+        },
+        {
+          "const": "none",
+          "title": "None"
+        }
       ],
       "default": "white"
     }
