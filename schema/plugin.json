@@ -1,4 +1,16 @@
 {
+  "jupyter.lab.toolbars": {
+    "TopBar": [
+      {
+        "name": "mpce-command-center",
+        "rank": 50
+      },
+      {
+        "name": "mpce-layout-toggles",
+        "rank": 980
+      }
+    ]
+  },
   "title": "Monokai Pro (CE)",
   "description": "Settings for the Monokai Pro (CE) themes.",
   "type": "object",
@@ -8,6 +20,12 @@
       "description": "Restyle JupyterLab's layout after VS Code's modern workbench: floating rounded cards, connected tabs, floating menus and pill-shaped selections. Works with any theme.",
       "type": "boolean",
       "default": false
+    },
+    "terminalsInBottomPanel": {
+      "title": "Open terminals in the bottom panel (Modern UI)",
+      "description": "With the Modern UI on, open new terminals in the bottom panel, as VS Code does, instead of as a tab next to your notebooks.",
+      "type": "boolean",
+      "default": true
     },
     "figureBackground": {
       "title": "Figure background (dark theme)",

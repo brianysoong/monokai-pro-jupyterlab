@@ -1,4 +1,4 @@
-"use strict";(self.rspackChunkjupyterlab_monokai_pro_ce=self.rspackChunkjupyterlab_monokai_pro_ce||[]).push([[689],{758(r,a,o){var e=o(601),t=o.n(e),d=o(314),m=o.n(d),n=o(417),p=o.n(n),i=new URL(o(411),o.b),l=m()(t()),c=p()(i);l.push([r.id,`/* -----------------------------------------------------------------------------
+"use strict";(self.rspackChunkjupyterlab_monokai_pro_ce=self.rspackChunkjupyterlab_monokai_pro_ce||[]).push([[689],{758(r,o,a){var e=a(601),t=a.n(e),d=a(314),m=a.n(d),n=a(417),p=a.n(n),i=new URL(a(111),a.b),l=new URL(a(533),a.b),c=new URL(a(187),a.b),s=new URL(a(411),a.b),u=m()(t()),b=p()(i),v=p()(l),g=p()(c),h=p()(s);u.push([r.id,`/* -----------------------------------------------------------------------------
 | Modern UI: the layout language of VS Code's modern workbench.
 |
 | Enabled by the \`modernUI\` setting, which sets \`data-mpce-modern\` on <html>.
@@ -47,8 +47,13 @@
   --mm-shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.36);
   --mm-shadow-xl: 0 0 20px rgba(0, 0, 0, 0.4);
 
+  /* Title bar icons */
+  --mm-search-icon: url(${b});
+  --mm-side-on-icon: url(${v});
+  --mm-side-off-icon: url(${g});
+
   /* Notebook gutter run button */
-  --mm-run-icon: url(${c});
+  --mm-run-icon: url(${h});
 
   /* Taller tabs and rounder controls, as in VS Code */
   --jp-private-horizontal-tab-height: 30px;
@@ -69,6 +74,8 @@
 }
 
 :root[data-mpce-modern] #jp-top-panel {
+  min-height: 35px;
+  align-items: center;
   border-bottom: none;
 }
 
@@ -100,6 +107,111 @@
 :root[data-mpce-modern] .lm-SplitPanel-handle,
 :root[data-mpce-modern] .lm-DockPanel-handle {
   background: transparent;
+}
+
+/* ---- Title bar ----------------------------------------------------------
+   35px tall like VS Code's, with a command center centered in the window
+   and side-panel toggles at the right (src/header.ts). */
+
+.mpce-CommandCenter,
+.mpce-LayoutToggles {
+  display: none;
+}
+
+/* Let the command center center itself on the whole title bar */
+:root[data-mpce-modern] #jp-top-bar {
+  position: static;
+}
+
+:root[data-mpce-modern] .mpce-CommandCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: clamp(200px, 32vw, 560px);
+  height: 24px;
+  padding: 0 8px;
+  border: var(--jp-border-width) solid
+    color-mix(in srgb, var(--jp-border-color0) 45%, transparent);
+  border-radius: var(--mm-radius-md);
+  background: var(--mm-window);
+  color: var(--jp-ui-font-color2);
+  font-family: var(--jp-ui-font-family);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+:root[data-mpce-modern] .mpce-CommandCenter:hover {
+  background: var(--mm-hover);
+  border-color: color-mix(in srgb, var(--jp-border-color0) 80%, transparent);
+  color: var(--jp-ui-font-color1);
+}
+
+:root[data-mpce-modern] .mpce-CommandCenter-icon {
+  width: 14px;
+  height: 14px;
+  background-color: currentcolor;
+  mask: var(--mm-search-icon) center / contain no-repeat;
+}
+
+:root[data-mpce-modern] .mpce-CommandCenter-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* On narrow windows, flow after the menus instead of overlapping them */
+@media (width <= 1100px) {
+  :root[data-mpce-modern] .mpce-CommandCenter {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin: 0 8px;
+  }
+}
+
+:root[data-mpce-modern] .mpce-LayoutToggles {
+  display: flex;
+  gap: 2px;
+  margin-right: var(--mm-gap);
+}
+
+:root[data-mpce-modern] .mpce-LayoutToggle {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: var(--mm-radius-sm);
+  background: transparent;
+  color: var(--jp-ui-font-color2);
+  cursor: pointer;
+}
+
+:root[data-mpce-modern] .mpce-LayoutToggle::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  background-color: currentcolor;
+  mask: var(--mm-side-off-icon) center / contain no-repeat;
+}
+
+:root[data-mpce-modern] .mpce-LayoutToggle[aria-pressed='true']::before {
+  mask-image: var(--mm-side-on-icon);
+}
+
+:root[data-mpce-modern] .mpce-LayoutToggle.mpce-mod-right::before {
+  transform: scaleX(-1);
+}
+
+:root[data-mpce-modern] .mpce-LayoutToggle:hover {
+  background: var(--mm-hover);
+  color: var(--jp-ui-font-color0);
 }
 
 /* ---- Side cards ----------------------------------------------------------
@@ -560,4 +672,4 @@
   .jp-ToolbarButtonComponent {
   border-radius: var(--mm-radius-sm);
 }
-`,""]),o.d(a,{},{A:l})},314(r){r.exports=function(r){var a=[];return a.toString=function(){return this.map(function(a){var o="",e=void 0!==a[5];return a[4]&&(o+="@supports (".concat(a[4],") {")),a[2]&&(o+="@media ".concat(a[2]," {")),e&&(o+="@layer".concat(a[5].length>0?" ".concat(a[5]):""," {")),o+=r(a),e&&(o+="}"),a[2]&&(o+="}"),a[4]&&(o+="}"),o}).join("")},a.i=function(r,o,e,t,d){"string"==typeof r&&(r=[[null,r,void 0]]);var m={};if(e)for(var n=0;n<this.length;n++){var p=this[n][0];null!=p&&(m[p]=!0)}for(var i=0;i<r.length;i++){var l=[].concat(r[i]);e&&m[l[0]]||(void 0!==d&&(void 0===l[5]||(l[1]="@layer".concat(l[5].length>0?" ".concat(l[5]):""," {").concat(l[1],"}")),l[5]=d),o&&(l[2]&&(l[1]="@media ".concat(l[2]," {").concat(l[1],"}")),l[2]=o),t&&(l[4]?(l[1]="@supports (".concat(l[4],") {").concat(l[1],"}"),l[4]=t):l[4]="".concat(t)),a.push(l))}},a}},417(r){r.exports=function(r,a){return(a||(a={}),r&&(r=String(r.__esModule?r.default:r),/^['"].*['"]$/.test(r)&&(r=r.slice(1,-1)),a.hash&&(r+=a.hash),/["'() \t\n]|(%20)/.test(r)||a.needQuotes))?'"'.concat(r.replace(/"/g,'\\"').replace(/\n/g,"\\n"),'"'):r}},601(r){r.exports=function(r){return r[1]}},320(r,a,o){o.r(a);var e=o(72),t=o.n(e),d=o(825),m=o.n(d),n=o(659),p=o.n(n),i=o(56),l=o.n(i),c=o(540),s=o.n(c),u=o(113),b=o.n(u),v=o(758),h={};h.styleTagTransform=b(),h.setAttributes=l(),h.insert=p().bind(null,"head"),h.domAPI=m(),h.insertStyleElement=s(),t()(v.A,h);let g=v.A&&v.A.locals?v.A.locals:void 0;o.d(a,{},{default:g})},72(r){var a=[];function o(r){for(var o=-1,e=0;e<a.length;e++)if(a[e].identifier===r){o=e;break}return o}function e(r,e){for(var t={},d=[],m=0;m<r.length;m++){var n=r[m],p=e.base?n[0]+e.base:n[0],i=t[p]||0,l="".concat(p," ").concat(i);t[p]=i+1;var c=o(l),s={css:n[1],media:n[2],sourceMap:n[3],supports:n[4],layer:n[5]};if(-1!==c)a[c].references++,a[c].updater(s);else{var u=function(r,a){var o=a.domAPI(a);return o.update(r),function(a){a?(a.css!==r.css||a.media!==r.media||a.sourceMap!==r.sourceMap||a.supports!==r.supports||a.layer!==r.layer)&&o.update(r=a):o.remove()}}(s,e);e.byIndex=m,a.splice(m,0,{identifier:l,updater:u,references:1})}d.push(l)}return d}r.exports=function(r,t){var d=e(r=r||[],t=t||{});return function(r){r=r||[];for(var m=0;m<d.length;m++){var n=o(d[m]);a[n].references--}for(var p=e(r,t),i=0;i<d.length;i++){var l=o(d[i]);0===a[l].references&&(a[l].updater(),a.splice(l,1))}d=p}}},659(r){var a={};r.exports=function(r,o){var e=function(r){if(void 0===a[r]){var o=document.querySelector(r);if(window.HTMLIFrameElement&&o instanceof window.HTMLIFrameElement)try{o=o.contentDocument.head}catch(r){o=null}a[r]=o}return a[r]}(r);if(!e)throw Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");e.appendChild(o)}},540(r){r.exports=function(r){var a=document.createElement("style");return r.setAttributes(a,r.attributes),r.insert(a,r.options),a}},56(r,a,o){r.exports=function(r){var a=o.nc;a&&r.setAttribute("nonce",a)}},825(r){r.exports=function(r){if("u"<typeof document)return{update:function(){},remove:function(){}};var a=r.insertStyleElement(r);return{update:function(o){var e,t,d;e="",o.supports&&(e+="@supports (".concat(o.supports,") {")),o.media&&(e+="@media ".concat(o.media," {")),(t=void 0!==o.layer)&&(e+="@layer".concat(o.layer.length>0?" ".concat(o.layer):""," {")),e+=o.css,t&&(e+="}"),o.media&&(e+="}"),o.supports&&(e+="}"),(d=o.sourceMap)&&"u">typeof btoa&&(e+="\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(d))))," */")),r.styleTagTransform(e,a,r.options)},remove:function(){var r;null===(r=a).parentNode||r.parentNode.removeChild(r)}}}},113(r){r.exports=function(r,a){if(a.styleSheet)a.styleSheet.cssText=r;else{for(;a.firstChild;)a.removeChild(a.firstChild);a.appendChild(document.createTextNode(r))}}},411(r){r.exports="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M5 3.2v9.6c0 .4.4.6.8.4l7.2-4.8a.5.5 0 0 0 0-.8L5.8 2.8c-.4-.2-.8 0-.8.4z%27/%3E%3C/svg%3E"}}]);
+`,""]),a.d(o,{},{A:u})},314(r){r.exports=function(r){var o=[];return o.toString=function(){return this.map(function(o){var a="",e=void 0!==o[5];return o[4]&&(a+="@supports (".concat(o[4],") {")),o[2]&&(a+="@media ".concat(o[2]," {")),e&&(a+="@layer".concat(o[5].length>0?" ".concat(o[5]):""," {")),a+=r(o),e&&(a+="}"),o[2]&&(a+="}"),o[4]&&(a+="}"),a}).join("")},o.i=function(r,a,e,t,d){"string"==typeof r&&(r=[[null,r,void 0]]);var m={};if(e)for(var n=0;n<this.length;n++){var p=this[n][0];null!=p&&(m[p]=!0)}for(var i=0;i<r.length;i++){var l=[].concat(r[i]);e&&m[l[0]]||(void 0!==d&&(void 0===l[5]||(l[1]="@layer".concat(l[5].length>0?" ".concat(l[5]):""," {").concat(l[1],"}")),l[5]=d),a&&(l[2]&&(l[1]="@media ".concat(l[2]," {").concat(l[1],"}")),l[2]=a),t&&(l[4]?(l[1]="@supports (".concat(l[4],") {").concat(l[1],"}"),l[4]=t):l[4]="".concat(t)),o.push(l))}},o}},417(r){r.exports=function(r,o){return(o||(o={}),r&&(r=String(r.__esModule?r.default:r),/^['"].*['"]$/.test(r)&&(r=r.slice(1,-1)),o.hash&&(r+=o.hash),/["'() \t\n]|(%20)/.test(r)||o.needQuotes))?'"'.concat(r.replace(/"/g,'\\"').replace(/\n/g,"\\n"),'"'):r}},601(r){r.exports=function(r){return r[1]}},320(r,o,a){a.r(o);var e=a(72),t=a.n(e),d=a(825),m=a.n(d),n=a(659),p=a.n(n),i=a(56),l=a.n(i),c=a(540),s=a.n(c),u=a(113),b=a.n(u),v=a(758),g={};g.styleTagTransform=b(),g.setAttributes=l(),g.insert=p().bind(null,"head"),g.domAPI=m(),g.insertStyleElement=s(),t()(v.A,g);let h=v.A&&v.A.locals?v.A.locals:void 0;a.d(o,{},{default:h})},72(r){var o=[];function a(r){for(var a=-1,e=0;e<o.length;e++)if(o[e].identifier===r){a=e;break}return a}function e(r,e){for(var t={},d=[],m=0;m<r.length;m++){var n=r[m],p=e.base?n[0]+e.base:n[0],i=t[p]||0,l="".concat(p," ").concat(i);t[p]=i+1;var c=a(l),s={css:n[1],media:n[2],sourceMap:n[3],supports:n[4],layer:n[5]};if(-1!==c)o[c].references++,o[c].updater(s);else{var u=function(r,o){var a=o.domAPI(o);return a.update(r),function(o){o?(o.css!==r.css||o.media!==r.media||o.sourceMap!==r.sourceMap||o.supports!==r.supports||o.layer!==r.layer)&&a.update(r=o):a.remove()}}(s,e);e.byIndex=m,o.splice(m,0,{identifier:l,updater:u,references:1})}d.push(l)}return d}r.exports=function(r,t){var d=e(r=r||[],t=t||{});return function(r){r=r||[];for(var m=0;m<d.length;m++){var n=a(d[m]);o[n].references--}for(var p=e(r,t),i=0;i<d.length;i++){var l=a(d[i]);0===o[l].references&&(o[l].updater(),o.splice(l,1))}d=p}}},659(r){var o={};r.exports=function(r,a){var e=function(r){if(void 0===o[r]){var a=document.querySelector(r);if(window.HTMLIFrameElement&&a instanceof window.HTMLIFrameElement)try{a=a.contentDocument.head}catch(r){a=null}o[r]=a}return o[r]}(r);if(!e)throw Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");e.appendChild(a)}},540(r){r.exports=function(r){var o=document.createElement("style");return r.setAttributes(o,r.attributes),r.insert(o,r.options),o}},56(r,o,a){r.exports=function(r){var o=a.nc;o&&r.setAttribute("nonce",o)}},825(r){r.exports=function(r){if("u"<typeof document)return{update:function(){},remove:function(){}};var o=r.insertStyleElement(r);return{update:function(a){var e,t,d;e="",a.supports&&(e+="@supports (".concat(a.supports,") {")),a.media&&(e+="@media ".concat(a.media," {")),(t=void 0!==a.layer)&&(e+="@layer".concat(a.layer.length>0?" ".concat(a.layer):""," {")),e+=a.css,t&&(e+="}"),a.media&&(e+="}"),a.supports&&(e+="}"),(d=a.sourceMap)&&"u">typeof btoa&&(e+="\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(d))))," */")),r.styleTagTransform(e,o,r.options)},remove:function(){var r;null===(r=o).parentNode||r.parentNode.removeChild(r)}}}},113(r){r.exports=function(r,o){if(o.styleSheet)o.styleSheet.cssText=r;else{for(;o.firstChild;)o.removeChild(o.firstChild);o.appendChild(document.createTextNode(r))}}},111(r){r.exports="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M10.4 11.1a5 5 0 1 1 .7-.7l3.75 3.75-.7.7zM6.5 10.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8z%27/%3E%3C/svg%3E"},411(r){r.exports="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M5 3.2v9.6c0 .4.4.6.8.4l7.2-4.8a.5.5 0 0 0 0-.8L5.8 2.8c-.4-.2-.8 0-.8.4z%27/%3E%3C/svg%3E"},187(r){r.exports="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath fill-rule=%27evenodd%27 d=%27M2.5 2h11A1.5 1.5 0 0 1 15 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9A1.5 1.5 0 0 1 2.5 2zM2.5 3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5H6V3zM7 3v10h6.5a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z%27/%3E%3C/svg%3E"},533(r){r.exports="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath fill-rule=%27evenodd%27 d=%27M2.5 2h11A1.5 1.5 0 0 1 15 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9A1.5 1.5 0 0 1 2.5 2zM7 3v10h6.5a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5z%27/%3E%3C/svg%3E"}}]);

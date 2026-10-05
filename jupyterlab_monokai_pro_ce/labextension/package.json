@@ -64,11 +64,13 @@
     "@jupyterlab/application": "^4.0.0",
     "@jupyterlab/apputils": "^4.0.0",
     "@jupyterlab/codemirror": "^4.0.0",
+    "@jupyterlab/coreutils": "^6.0.0",
     "@jupyterlab/notebook": "^4.0.0",
     "@jupyterlab/settingregistry": "^4.0.0",
     "@jupyterlab/terminal": "^4.0.0",
     "@lezer/common": "^1.0.0",
     "@lezer/highlight": "^1.0.0",
+    "@lumino/commands": "^2.0.0",
     "@lumino/messaging": "^2.0.0",
     "@lumino/widgets": "^2.0.0"
   },
@@ -141,6 +143,11 @@
         "singleton": true,
         "requiredVersion": "^4.0.0"
       },
+      "@jupyterlab/coreutils": {
+        "bundled": false,
+        "singleton": true,
+        "requiredVersion": "^6.0.0"
+      },
       "@jupyterlab/notebook": {
         "bundled": false,
         "singleton": true,
@@ -166,6 +173,11 @@
         "singleton": true,
         "requiredVersion": "^1.0.0"
       },
+      "@lumino/commands": {
+        "bundled": false,
+        "singleton": true,
+        "requiredVersion": "^2.0.0"
+      },
       "@lumino/messaging": {
         "bundled": false,
         "singleton": true,
@@ -178,7 +190,7 @@
       }
     },
     "_build": {
-      "load": "static/remoteEntry.aa94a86fbd1db252.js",
+      "load": "static/remoteEntry.275d639e5786ffc5.js",
       "extension": "./extension",
       "style": "./style"
     }

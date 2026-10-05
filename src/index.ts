@@ -1,8 +1,9 @@
 import {
+  ILabShell,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { IThemeManager } from '@jupyterlab/apputils';
+import { IThemeManager, IToolbarWidgetRegistry } from '@jupyterlab/apputils';
 import {
   EditorExtensionRegistry,
   IEditorExtensionRegistry,
@@ -16,7 +17,8 @@ import { ITerminalTracker } from '@jupyterlab/terminal';
 // eslint-disable-next-line jupyter/prefer-lazy-imports
 import { extendStaticHighlighting, monokaiSyntax } from './syntax';
 import { enableGutterRunButtons } from './cells';
-import { refitShell } from './layout';
+import { CommandCenter, LayoutToggles } from './header';
+import { refitShell, routeTerminalsToPanel } from './layout';
 import { themeTerminals } from './terminal';
 
 const PLUGIN_ID = 'jupyterlab-monokai-pro-ce:plugin';
@@ -47,6 +49,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
     IEditorLanguageRegistry,
     ITerminalTracker,
     INotebookTracker,
+    ILabShell,
+    IToolbarWidgetRegistry,
     ISettingRegistry
   ],
   activate: (
@@ -56,6 +60,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
     languages: IEditorLanguageRegistry | null,
     terminals: ITerminalTracker | null,
     notebooks: INotebookTracker | null,
+    labShell: ILabShell | null,
+    toolbars: IToolbarWidgetRegistry | null,
     settingRegistry: ISettingRegistry | null
   ) => {
     for (const { name, variant, isLight } of VARIANTS) {
@@ -92,11 +98,38 @@ const plugin: JupyterFrontEndPlugin<void> = {
       enableGutterRunButtons(notebooks);
     }
 
+    // Modern UI title bar: a command center and side-panel toggles
+    if (toolbars) {
+      toolbars.addFactory(
+        'TopBar',
+        'mpce-command-center',
+        () => new CommandCenter(app.commands)
+      );
+      if (labShell) {
+        toolbars.addFactory(
+          'TopBar',
+          'mpce-layout-toggles',
+          () => new LayoutToggles(app.commands, labShell)
+        );
+      }
+    }
+
+    let terminalsInPanel = true;
+    if (labShell && terminals) {
+      routeTerminalsToPanel(
+        labShell,
+        terminals,
+        () => terminalsInPanel && root.hasAttribute('data-mpce-modern')
+      );
+    }
+
     root.dataset.mpceFigureBackground = 'white';
     if (settingRegistry) {
       const apply = (settings: ISettingRegistry.ISettings) => {
-        const { figureBackground, modernUI } = settings.composite;
+        const { figureBackground, modernUI, terminalsInBottomPanel } =
+          settings.composite;
         root.dataset.mpceFigureBackground = figureBackground as string;
+        terminalsInPanel = terminalsInBottomPanel !== false;
         const modern = modernUI === true;
         if (modern !== root.hasAttribute('data-mpce-modern')) {
           root.toggleAttribute('data-mpce-modern', modern);
