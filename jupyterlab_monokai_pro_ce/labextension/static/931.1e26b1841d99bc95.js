@@ -367,7 +367,7 @@
 :root[data-mpce-codicons] .lm-TabBar-tabCloseIcon {
   color: var(--jp-ui-font-color1);
 }
-`,""]),a.d(t,{},{A:od})},3377(o,t,a){var e=a(1601),r=a.n(e),n=a(6314),d=a.n(n),c=a(4417),i=a.n(c),m=new URL(a(4183),a.b),s=new URL(a(4173),a.b),p=new URL(a(5668),a.b),C=new URL(a(7849),a.b),l=new URL(a(9393),a.b),g=new URL(a(6505),a.b),u=new URL(a(3747),a.b),v=d()(r()),h=i()(m),w=i()(s),b=i()(p),x=i()(C),L=i()(l),f=i()(g),H=i()(u);v.push([o.id,`/* -----------------------------------------------------------------------------
+`,""]),a.d(t,{},{A:od})},3377(o,t,a){var e=a(1601),r=a.n(e),n=a(6314),d=a.n(n),c=a(4417),i=a.n(c),m=new URL(a(4183),a.b),s=new URL(a(4173),a.b),p=new URL(a(5668),a.b),C=new URL(a(7849),a.b),l=new URL(a(9393),a.b),g=new URL(a(6376),a.b),u=new URL(a(6505),a.b),v=new URL(a(3747),a.b),h=d()(r()),w=i()(m),b=i()(s),x=i()(p),L=i()(C),f=i()(l),H=i()(g),j=i()(u),V=i()(v);h.push([o.id,`/* -----------------------------------------------------------------------------
 | Modern UI: the layout language of VS Code's modern workbench.
 |
 | Enabled by the \`modernUI\` setting, which sets \`data-mpce-modern\` on <html>.
@@ -417,15 +417,16 @@
   --mm-shadow-xl: 0 0 20px rgba(0, 0, 0, 0.4);
 
   /* Title bar icons (Codicons) */
-  --mm-search-icon: url(${h});
-  --mm-left-on-icon: url(${w});
-  --mm-left-off-icon: url(${b});
-  --mm-right-on-icon: url(${x});
-  --mm-right-off-icon: url(${L});
-  --mm-menu-icon: url(${f});
+  --mm-search-icon: url(${w});
+  --mm-left-on-icon: url(${b});
+  --mm-left-off-icon: url(${x});
+  --mm-right-on-icon: url(${L});
+  --mm-right-off-icon: url(${f});
+  --mm-add-icon: url(${H});
+  --mm-menu-icon: url(${j});
 
   /* Notebook gutter run button (Codicon play, VS Code's notebook-execute) */
-  --mm-run-icon: url(${H});
+  --mm-run-icon: url(${V});
 
   /* Taller tabs and rounder controls, as in VS Code */
   --jp-private-horizontal-tab-height: 30px;
@@ -857,11 +858,37 @@
   color: var(--mm-active-fg);
 }
 
+:root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-addButton,
 :root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-addButton {
+  border: none;
   border-radius: var(--mm-radius-sm);
   margin: 0 0 3px 2px;
+  background: transparent;
 }
 
+:root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-addButton {
+  /* Lumino's default "+" button is empty; JupyterLab only fills in the
+     document tabs' one */
+  width: 24px;
+  height: 24px;
+  align-self: center;
+  margin: 0 var(--mm-gap) 0 0;
+  color: var(--jp-ui-font-color1);
+}
+
+:root[data-mpce-modern]
+  #jp-down-stack
+  > .lm-TabBar
+  .lm-TabBar-addButton::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  background-color: currentcolor;
+  mask: var(--mm-add-icon) center / contain no-repeat;
+}
+
+:root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-addButton:hover,
 :root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-addButton:hover {
   background: var(--mm-hover);
 }
@@ -1138,7 +1165,7 @@
   .jp-ToolbarButtonComponent {
   border-radius: var(--mm-radius-sm);
 }
-`,""]),a.d(t,{},{A:v})},5079(o,t,a){var e=a(1601),r=a.n(e),n=a(6314),d=(a.n(n))()(r());d.push([o.id,`/* -----------------------------------------------------------------------------
+`,""]),a.d(t,{},{A:h})},5079(o,t,a){var e=a(1601),r=a.n(e),n=a(6314),d=(a.n(n))()(r());d.push([o.id,`/* -----------------------------------------------------------------------------
 | Refinements shared by the Monokai themes and the Modern UI.
 |---------------------------------------------------------------------------- */
 

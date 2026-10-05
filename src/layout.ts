@@ -10,7 +10,7 @@ import { MainAreaWidget } from '@jupyterlab/apputils';
 import { ITerminal, ITerminalTracker } from '@jupyterlab/terminal';
 import { CommandRegistry } from '@lumino/commands';
 import { MessageLoop } from '@lumino/messaging';
-import { Widget } from '@lumino/widgets';
+import { TabPanel, Widget } from '@lumino/widgets';
 
 function fitTree(widget: Widget): void {
   for (const child of widget.children()) {
@@ -158,4 +158,31 @@ export function addTerminalCommands(
     label: 'New Terminal',
     execute: () => commands.execute('terminal:create-new')
   });
+}
+
+/**
+ * Show the tab bar's built-in "+" button on the bottom panel (as on the
+ * document tabs), opening a new terminal like VS Code's terminal panel.
+ * JupyterLab doesn't expose the bottom panel publicly, so this reaches its
+ * private panel and does nothing if that is missing.
+ */
+export function addNewTerminalButton(
+  commands: CommandRegistry,
+  shell: ILabShell
+): (enabled: boolean) => void {
+  const tabBar = (shell as unknown as { _downPanel?: TabPanel })._downPanel
+    ?.tabBar;
+  if (!tabBar || !('addButtonEnabled' in tabBar)) {
+    return () => undefined;
+  }
+  tabBar.addRequested.connect(() => {
+    void commands.execute('terminal:create-new');
+  });
+  tabBar.addButtonEnabled = false;
+  const button = (tabBar as { addButtonNode?: HTMLElement }).addButtonNode;
+  button?.setAttribute('title', 'New Terminal');
+  button?.setAttribute('aria-label', 'New Terminal');
+  return enabled => {
+    tabBar.addButtonEnabled = enabled;
+  };
 }

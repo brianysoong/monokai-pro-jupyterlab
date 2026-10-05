@@ -28,6 +28,7 @@ import {
   TitleBarLayout
 } from './header';
 import {
+  addNewTerminalButton,
   addTerminalCommands,
   refitShell,
   routeTerminalsToPanel
@@ -137,6 +138,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const titleBar = labShell ? new TitleBarLayout(labShell) : null;
     void app.restored.then(() => titleBar?.refresh());
 
+    const setNewTerminalButton = labShell
+      ? addNewTerminalButton(app.commands, labShell)
+      : () => undefined;
+
     let terminalsInPanel = true;
     if (labShell && terminals) {
       addTerminalCommands(app.commands, labShell, terminals);
@@ -165,6 +170,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
           root.toggleAttribute('data-mpce-modern', modern);
           refitShell(app.shell);
           titleBar?.refresh();
+          setNewTerminalButton(modern);
         }
         root.toggleAttribute(
           'data-mpce-codicons',
