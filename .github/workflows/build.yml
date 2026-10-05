@@ -31,13 +31,18 @@ jobs:
           jlpm run lint:check
 
       - name: Check the committed build matches the sources
+        # The module federation manifest (remoteEntry) and the package.json
+        # line pointing to it record build-environment details and differ
+        # between machines; every code chunk, the theme CSS and the schemas
+        # must match exactly.
         run: |
           set -eux
           jlpm build:prod
-          git status --porcelain jupyterlab_monokai_pro_ce/labextension
-          if [ -n "$(git status --porcelain jupyterlab_monokai_pro_ce/labextension)" ]; then
+          paths="jupyterlab_monokai_pro_ce/labextension :(exclude)jupyterlab_monokai_pro_ce/labextension/static/remoteEntry.*.js :(exclude)jupyterlab_monokai_pro_ce/labextension/package.json"
+          git status --porcelain -- $paths
+          if [ -n "$(git status --porcelain -- $paths)" ]; then
             echo "::error::jupyterlab_monokai_pro_ce/labextension is stale. Run 'jlpm build:prod' and commit the result."
-            git diff --stat jupyterlab_monokai_pro_ce/labextension
+            git diff --stat -- $paths
             exit 1
           fi
 
