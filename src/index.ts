@@ -126,7 +126,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     root.dataset.mpceFigureBackground = 'white';
     if (settingRegistry) {
       const apply = (settings: ISettingRegistry.ISettings) => {
-        const { figureBackground, modernUI, terminalsInBottomPanel } =
+        const { figureBackground, modernUI, terminalsInBottomPanel, codicons } =
           settings.composite;
         root.dataset.mpceFigureBackground = figureBackground as string;
         terminalsInPanel = terminalsInBottomPanel !== false;
@@ -135,6 +135,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
           root.toggleAttribute('data-mpce-modern', modern);
           refitShell(app.shell);
         }
+        root.toggleAttribute(
+          'data-mpce-codicons',
+          modern && codicons !== false
+        );
       };
       settingRegistry
         .load(PLUGIN_ID)

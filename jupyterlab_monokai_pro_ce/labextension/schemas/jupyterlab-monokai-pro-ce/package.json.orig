@@ -222,7 +222,10 @@
             "alpha-value-notation": null,
             "color-function-notation": null,
             "no-descending-specificity": null
-        }
+        },
+        "ignoreFiles": [
+            "style/codicons.css"
+        ]
     },
-    "style": "style/modern.css"
+    "style": "style/base.css"
 }

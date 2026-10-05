@@ -21,6 +21,12 @@
       "type": "boolean",
       "default": false
     },
+    "codicons": {
+      "title": "Use VS Code icons (Modern UI)",
+      "description": "With the Modern UI on, replace JupyterLab's interface icons with Codicons, VS Code's icon set. Colored file-type icons are kept.",
+      "type": "boolean",
+      "default": true
+    },
     "terminalsInBottomPanel": {
       "title": "Open terminals in the bottom panel (Modern UI)",
       "description": "With the Modern UI on, open new terminals in the bottom panel, as VS Code does, instead of as a tab next to your notebooks.",

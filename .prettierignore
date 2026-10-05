@@ -6,3 +6,5 @@ node_modules
 jupyterlab_monokai_pro_ce
 eslint.config.mjs
 .venv
+style/codicons.css
+style/codicons/

@@ -190,7 +190,7 @@
       }
     },
     "_build": {
-      "load": "static/remoteEntry.275d639e5786ffc5.js",
+      "load": "static/remoteEntry.2507096ec8d83fa0.js",
       "extension": "./extension",
       "style": "./style"
     }
@@ -227,7 +227,10 @@
       "alpha-value-notation": null,
       "color-function-notation": null,
       "no-descending-specificity": null
-    }
+    },
+    "ignoreFiles": [
+      "style/codicons.css"
+    ]
   },
-  "style": "style/modern.css"
+  "style": "style/base.css"
 }
