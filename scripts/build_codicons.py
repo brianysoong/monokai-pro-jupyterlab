@@ -34,7 +34,6 @@ MAPPING = {
     "close": "close",
     "close-all": "close-all",
     "code": "code",
-    "collapse": "fold",
     "collapse-all": "collapse-all",
     "copy": "copy",
     "delete": "trash",
@@ -94,6 +93,25 @@ CONTEXT = """\
 :root[data-mpce-codicons]
   .jp-ToolbarButtonComponent[data-command='launcher:create'] {
   color: var(--mpce-on-highlight, var(--jp-ui-inverse-font-color0));
+}
+
+/* A tab with unsaved changes shows JupyterLab's dot in place of the close
+   icon until hovered (VS Code does the same); hand it back JupyterLab's own
+   artwork, which draws the dot */
+:root[data-mpce-codicons]
+  .lm-TabBar-tab.jp-mod-dirty
+  > .lm-TabBar-tabCloseIcon
+  > svg:not(:hover) {
+  background: none;
+  mask: none;
+}
+
+:root[data-mpce-codicons]
+  .lm-TabBar-tab.jp-mod-dirty
+  > .lm-TabBar-tabCloseIcon
+  > svg:not(:hover)
+  > * {
+  visibility: visible;
 }
 
 /* Tab close buttons keep the plain icon color, not the tab's highlight */

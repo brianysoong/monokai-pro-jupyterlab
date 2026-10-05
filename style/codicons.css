@@ -21,7 +21,6 @@
 :root[data-mpce-codicons] svg[data-icon='ui-components:close'],
 :root[data-mpce-codicons] svg[data-icon='ui-components:close-all'],
 :root[data-mpce-codicons] svg[data-icon='ui-components:code'],
-:root[data-mpce-codicons] svg[data-icon='ui-components:collapse'],
 :root[data-mpce-codicons] svg[data-icon='ui-components:collapse-all'],
 :root[data-mpce-codicons] svg[data-icon='ui-components:copy'],
 :root[data-mpce-codicons] svg[data-icon='ui-components:delete'],
@@ -79,7 +78,6 @@
 :root[data-mpce-codicons] svg[data-icon='ui-components:close'] > *,
 :root[data-mpce-codicons] svg[data-icon='ui-components:close-all'] > *,
 :root[data-mpce-codicons] svg[data-icon='ui-components:code'] > *,
-:root[data-mpce-codicons] svg[data-icon='ui-components:collapse'] > *,
 :root[data-mpce-codicons] svg[data-icon='ui-components:collapse-all'] > *,
 :root[data-mpce-codicons] svg[data-icon='ui-components:copy'] > *,
 :root[data-mpce-codicons] svg[data-icon='ui-components:delete'] > *,
@@ -179,10 +177,6 @@
 
 :root[data-mpce-codicons] svg[data-icon='ui-components:code'] {
   --mpce-codicon: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg' fill='currentColor'%3E%3Cpath d='M9.80307 3.0431C10.0554 3.15525 10.1691 3.45073 10.0569 3.70307L6.05691 12.7031C5.94475 12.9554 5.64927 13.0691 5.39693 12.9569C5.14459 12.8448 5.03094 12.5493 5.14309 12.2969L9.14309 3.29693C9.25525 3.04459 9.55073 2.93094 9.80307 3.0431ZM4.33218 5.3763C4.53857 5.55976 4.55716 5.87579 4.3737 6.08218L2.66898 8L4.3737 9.91782C4.55716 10.1242 4.53857 10.4402 4.33218 10.6237C4.12579 10.8072 3.80975 10.7886 3.6263 10.5822L1.6263 8.33218C1.4579 8.14274 1.4579 7.85726 1.6263 7.66782L3.6263 5.41782C3.80975 5.21143 4.12579 5.19284 4.33218 5.3763ZM11.6678 5.3763C11.8742 5.19284 12.1902 5.21143 12.3737 5.41782L14.3737 7.66782C14.5421 7.85726 14.5421 8.14274 14.3737 8.33218L12.3737 10.5822C12.1902 10.7886 11.8742 10.8072 11.6678 10.6237C11.4614 10.4402 11.4428 10.1242 11.6263 9.91782L13.331 8L11.6263 6.08218C11.4428 5.87579 11.4614 5.55976 11.6678 5.3763Z'/%3E%3C/svg%3E");
-}
-
-:root[data-mpce-codicons] svg[data-icon='ui-components:collapse'] {
-  --mpce-codicon: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg' fill='currentColor'%3E%3Cpath d='M11.8536 3.35355L8.35355 6.85355C8.15829 7.04882 7.84171 7.04882 7.64645 6.85355L4.14645 3.35355C3.95118 3.15829 3.95118 2.84171 4.14645 2.64645C4.34171 2.45118 4.65829 2.45118 4.85355 2.64645L8 5.79289L11.1464 2.64645C11.3417 2.45118 11.6583 2.45118 11.8536 2.64645C12.0488 2.84171 12.0488 3.15829 11.8536 3.35355ZM11.8536 12.6464L8.35355 9.14645C8.15829 8.95118 7.84171 8.95118 7.64645 9.14645L4.14645 12.6464C3.95118 12.8417 3.95118 13.1583 4.14645 13.3536C4.34171 13.5488 4.65829 13.5488 4.85355 13.3536L8 10.2071L11.1464 13.3536C11.3417 13.5488 11.6583 13.5488 11.8536 13.3536C12.0488 13.1583 12.0488 12.8417 11.8536 12.6464Z'/%3E%3C/svg%3E");
 }
 
 :root[data-mpce-codicons] svg[data-icon='ui-components:collapse-all'] {
@@ -343,6 +337,25 @@
 :root[data-mpce-codicons]
   .jp-ToolbarButtonComponent[data-command='launcher:create'] {
   color: var(--mpce-on-highlight, var(--jp-ui-inverse-font-color0));
+}
+
+/* A tab with unsaved changes shows JupyterLab's dot in place of the close
+   icon until hovered (VS Code does the same); hand it back JupyterLab's own
+   artwork, which draws the dot */
+:root[data-mpce-codicons]
+  .lm-TabBar-tab.jp-mod-dirty
+  > .lm-TabBar-tabCloseIcon
+  > svg:not(:hover) {
+  background: none;
+  mask: none;
+}
+
+:root[data-mpce-codicons]
+  .lm-TabBar-tab.jp-mod-dirty
+  > .lm-TabBar-tabCloseIcon
+  > svg:not(:hover)
+  > * {
+  visibility: visible;
 }
 
 /* Tab close buttons keep the plain icon color, not the tab's highlight */

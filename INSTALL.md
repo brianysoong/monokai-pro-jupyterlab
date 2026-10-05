@@ -38,6 +38,21 @@ JupyterLab stores the theme choice in `~/.jupyter/lab/user-settings`. To make Mo
 }
 ```
 
+### Modern UI
+
+To get the VS Code-style layout, open _Settings → Settings Editor → Monokai Pro (CE)_ and turn on **Modern UI**. Two related settings default to on: **Use VS Code icons** and **Open terminals in the bottom panel**. To make the Modern UI the default on a machine, add it to the same `overrides.json`:
+
+```json
+{
+  "@jupyterlab/apputils-extension:themes": {
+    "theme": "Monokai Pro (CE)"
+  },
+  "jupyterlab-monokai-pro-ce:plugin": {
+    "modernUI": true
+  }
+}
+```
+
 ### Figure background
 
 In the dark theme, image outputs get a white backing so transparent plots with dark text stay readable. To change this, open _Settings → Settings Editor → Monokai Pro (CE) → Figure background_ and choose `White`, `Auto` (only figures that ask for it) or `None`.

@@ -23,7 +23,26 @@ This Monokai Pro Community Edition (CE) theme is maintained by [Brian Soong](htt
 
 ![Monokai Pro Light (CE)](screenshot-light.png)
 
+## Modern UI (optional)
+
+![Modern UI](screenshot-modern.png)
+
+Turn on _Settings → Settings Editor → Monokai Pro (CE) → Modern UI_ to restyle JupyterLab's layout after VS Code's modern workbench. The measurements come from VS Code's own stylesheet.
+
+- **Layout:** floating rounded cards with 4px gutters. The activity bar and side panel form one card, each editor group and the bottom panel are cards of their own, and the status bar sits flat on the window.
+- **Title bar:** VS Code's command center (it shows the folder JupyterLab was started in, and clicking it opens the command palette), plus side-panel toggles.
+- **Tabs and floating panels:** tabs are sized to their titles, and the current tab joins its document. Menus, the command palette, dialogs and the completer float as rounded panels. List selections are pills.
+- **Notebook cells:** rounded editors whose outline brightens while you edit, a run button in the gutter above the execution count, a slim marker for the active cell, and a floating cell toolbar.
+- **Icons:** [Codicons](https://github.com/microsoft/vscode-codicons), VS Code's icon set, replace JupyterLab's interface icons. Colored file-type icons are kept.
+- **Terminals:** new terminals open in the bottom panel.
+
+The icons and the terminal placement each have their own setting. The Modern UI only uses JupyterLab's theme variables, so it also works with JupyterLab's built-in Light and Dark themes.
+
 Requires JupyterLab 4 (also works in Notebook 7).
+
+## Credits
+
+Codicons © Microsoft Corporation, used under [CC BY 4.0](style/codicons/LICENSE). They are recolored to match the theme.
 
 ## Monokai Pro for more apps
 
