@@ -16,11 +16,14 @@ import {
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { ITerminalTracker } from '@jupyterlab/terminal';
+import { ITranslator, nullTranslator } from '@jupyterlab/translation';
 
 // Small, and needed synchronously: editor extension factories cannot be async.
 // eslint-disable-next-line jupyter/prefer-lazy-imports
 import { extendStaticHighlighting, monokaiSyntax } from './syntax';
 import { enableGutterRunButtons } from './cells';
+// Also needed at once: the title bar items are registered during activation
+// eslint-disable-next-line jupyter/prefer-lazy-imports
 import {
   CommandCenter,
   LayoutToggles,
@@ -66,6 +69,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     ILabShell,
     IToolbarWidgetRegistry,
     ICommandPalette,
+    ITranslator,
     ISettingRegistry
   ],
   activate: (
@@ -78,8 +82,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
     labShell: ILabShell | null,
     toolbars: IToolbarWidgetRegistry | null,
     palette: ICommandPalette | null,
+    translator: ITranslator | null,
     settingRegistry: ISettingRegistry | null
   ) => {
+    const trans = (translator ?? nullTranslator).load(
+      'jupyterlab_monokai_pro_ce'
+    );
+
     for (const { name, variant, isLight } of VARIANTS) {
       manager.register({
         name,
@@ -119,18 +128,18 @@ const plugin: JupyterFrontEndPlugin<void> = {
       toolbars.addFactory(
         'TopBar',
         'mpce-command-center',
-        () => new CommandCenter(app.commands)
+        () => new CommandCenter(app.commands, trans)
       );
       if (labShell) {
         toolbars.addFactory(
           'TopBar',
           'mpce-menu-button',
-          () => new MenuButton(app.commands, labShell)
+          () => new MenuButton(app.commands, labShell, trans)
         );
         toolbars.addFactory(
           'TopBar',
           'mpce-layout-toggles',
-          () => new LayoutToggles(app.commands, labShell)
+          () => new LayoutToggles(app.commands, labShell, trans)
         );
       }
     }
@@ -139,17 +148,17 @@ const plugin: JupyterFrontEndPlugin<void> = {
     void app.restored.then(() => titleBar?.refresh());
 
     const setNewTerminalButton = labShell
-      ? addNewTerminalButton(app.commands, labShell)
+      ? addNewTerminalButton(app.commands, labShell, trans)
       : () => undefined;
 
     let terminalsInPanel = true;
     if (labShell && terminals) {
-      addTerminalCommands(app.commands, labShell, terminals);
+      addTerminalCommands(app.commands, labShell, terminals, trans);
       for (const command of [
         'monokai-pro-ce:toggle-terminal',
         'monokai-pro-ce:new-terminal'
       ]) {
-        palette?.addItem({ command, category: 'Terminal' });
+        palette?.addItem({ command, category: trans.__('Terminal') });
       }
       routeTerminalsToPanel(
         labShell,

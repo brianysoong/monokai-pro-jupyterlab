@@ -8,6 +8,7 @@
 import { ILabShell } from '@jupyterlab/application';
 import { MainAreaWidget } from '@jupyterlab/apputils';
 import { ITerminal, ITerminalTracker } from '@jupyterlab/terminal';
+import { TranslationBundle } from '@jupyterlab/translation';
 import { CommandRegistry } from '@lumino/commands';
 import { MessageLoop } from '@lumino/messaging';
 import { TabPanel, Widget } from '@lumino/widgets';
@@ -95,7 +96,8 @@ export function routeTerminalsToPanel(
 export function addTerminalCommands(
   commands: CommandRegistry,
   shell: ILabShell,
-  terminals: ITerminalTracker
+  terminals: ITerminalTracker,
+  trans: TranslationBundle
 ): void {
   // The document to return to when the terminal is hidden
   let lastDocument: Widget | null = null;
@@ -129,7 +131,8 @@ export function addTerminalCommands(
   const down = downArea(shell);
 
   commands.addCommand('monokai-pro-ce:toggle-terminal', {
-    label: 'Toggle Terminal',
+    label: trans.__('Toggle Terminal'),
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
       const terminal = panelTerminal();
       if (!terminal) {
@@ -155,7 +158,8 @@ export function addTerminalCommands(
   });
 
   commands.addCommand('monokai-pro-ce:new-terminal', {
-    label: 'New Terminal',
+    label: trans.__('New Terminal'),
+    describedBy: { args: { type: 'object', properties: {} } },
     execute: () => commands.execute('terminal:create-new')
   });
 }
@@ -168,7 +172,8 @@ export function addTerminalCommands(
  */
 export function addNewTerminalButton(
   commands: CommandRegistry,
-  shell: ILabShell
+  shell: ILabShell,
+  trans: TranslationBundle
 ): (enabled: boolean) => void {
   const tabBar = (shell as unknown as { _downPanel?: TabPanel })._downPanel
     ?.tabBar;
@@ -180,8 +185,9 @@ export function addNewTerminalButton(
   });
   tabBar.addButtonEnabled = false;
   const button = (tabBar as { addButtonNode?: HTMLElement }).addButtonNode;
-  button?.setAttribute('title', 'New Terminal');
-  button?.setAttribute('aria-label', 'New Terminal');
+  const label = trans.__('New Terminal');
+  button?.setAttribute('title', label);
+  button?.setAttribute('aria-label', label);
   return enabled => {
     tabBar.addButtonEnabled = enabled;
   };

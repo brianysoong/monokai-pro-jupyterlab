@@ -10,6 +10,7 @@
 
 import { ILabShell } from '@jupyterlab/application';
 import { PageConfig, PathExt } from '@jupyterlab/coreutils';
+import { TranslationBundle } from '@jupyterlab/translation';
 import { CommandRegistry } from '@lumino/commands';
 import { Menu, MenuBar, Widget } from '@lumino/widgets';
 
@@ -24,14 +25,16 @@ function shortcut(commands: CommandRegistry, command: string): string {
 
 /** A search box in the title bar that opens the command palette. */
 export class CommandCenter extends Widget {
-  constructor(commands: CommandRegistry) {
+  constructor(commands: CommandRegistry, trans: TranslationBundle) {
     const button = document.createElement('button');
     super({ node: button });
     this.addClass('mpce-CommandCenter');
     button.type = 'button';
 
     const keys = shortcut(commands, PALETTE);
-    button.title = keys ? `Search commands (${keys})` : 'Search commands';
+    button.title = keys
+      ? trans.__('Search commands (%1)', keys)
+      : trans.__('Search commands');
     button.setAttribute('aria-label', button.title);
 
     // Like VS Code, show the name of the folder JupyterLab was opened in
@@ -40,7 +43,7 @@ export class CommandCenter extends Widget {
     icon.className = 'mpce-CommandCenter-icon';
     const label = document.createElement('span');
     label.className = 'mpce-CommandCenter-label';
-    label.textContent = root || 'Search';
+    label.textContent = root || trans.__('Search');
     button.append(icon, label);
 
     button.addEventListener('click', () => void commands.execute(PALETTE));
@@ -49,21 +52,33 @@ export class CommandCenter extends Widget {
 
 /** Buttons that show and hide the side panels, reflecting their state. */
 export class LayoutToggles extends Widget {
-  constructor(commands: CommandRegistry, shell: ILabShell) {
+  constructor(
+    commands: CommandRegistry,
+    shell: ILabShell,
+    trans: TranslationBundle
+  ) {
     super();
     this.addClass('mpce-LayoutToggles');
     this._shell = shell;
 
     const sides: ['left' | 'right', string, string][] = [
-      ['left', 'application:toggle-left-area', 'Toggle Primary Side Bar'],
-      ['right', 'application:toggle-right-area', 'Toggle Secondary Side Bar']
+      [
+        'left',
+        'application:toggle-left-area',
+        trans.__('Toggle Primary Side Bar')
+      ],
+      [
+        'right',
+        'application:toggle-right-area',
+        trans.__('Toggle Secondary Side Bar')
+      ]
     ];
     for (const [side, command, label] of sides) {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = `mpce-LayoutToggle mpce-mod-${side}`;
       const keys = shortcut(commands, command);
-      button.title = keys ? `${label} (${keys})` : label;
+      button.title = keys ? trans.__('%1 (%2)', label, keys) : label;
       button.setAttribute('aria-label', label);
       button.addEventListener('click', () => void commands.execute(command));
       this.node.appendChild(button);
@@ -99,13 +114,17 @@ export class LayoutToggles extends Widget {
  * submenu. Shown by TitleBarLayout once the menu bar no longer fits.
  */
 export class MenuButton extends Widget {
-  constructor(commands: CommandRegistry, shell: ILabShell) {
+  constructor(
+    commands: CommandRegistry,
+    shell: ILabShell,
+    trans: TranslationBundle
+  ) {
     const button = document.createElement('button');
     super({ node: button });
     this.addClass('mpce-MenuButton');
     button.type = 'button';
-    button.title = 'Application Menu';
-    button.setAttribute('aria-label', 'Application Menu');
+    button.title = trans.__('Application Menu');
+    button.setAttribute('aria-label', button.title);
     button.setAttribute('aria-haspopup', 'menu');
     button.addEventListener('click', () => this._open(commands, shell));
   }
