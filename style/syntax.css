@@ -157,43 +157,87 @@
 }
 
 /* ---- Python semantics (src/syntax.ts) ------------------------------------
-   These marks render inside the token spans; the `*` variants keep them
-   winning should another extension change the nesting. */
+   These marks render as the innermost spans, inside the token spans. */
 
-:root[data-mpce-theme] .mpce-sem-param,
-:root[data-mpce-theme] .mpce-sem-param * {
+:root[data-mpce-theme] .mpce-sem-param {
   color: var(--mpce-accent2);
   font-style: italic;
 }
 
-:root[data-mpce-theme] .mpce-sem-self,
-:root[data-mpce-theme] .mpce-sem-self * {
+:root[data-mpce-theme] .mpce-sem-self {
   color: var(--mpce-dimmed1);
   font-style: italic;
 }
 
-:root[data-mpce-theme] .mpce-sem-keyword,
-:root[data-mpce-theme] .mpce-sem-keyword * {
+:root[data-mpce-theme] .mpce-sem-keyword {
   color: var(--mpce-accent1);
   font-style: normal;
 }
 
-:root[data-mpce-theme] .mpce-sem-docstring,
-:root[data-mpce-theme] .mpce-sem-docstring * {
+:root[data-mpce-theme] .mpce-sem-docstring {
   color: var(--mpce-dimmed3);
 }
 
-:root[data-mpce-theme] .mpce-sem-decorator,
-:root[data-mpce-theme] .mpce-sem-decorator * {
+:root[data-mpce-theme] .mpce-sem-decorator {
   color: var(--mpce-accent4);
 }
 
 :root[data-mpce-theme] .mpce-sem-type,
-:root[data-mpce-theme] .mpce-sem-type *,
-:root[data-mpce-theme] .mpce-sem-inherited,
-:root[data-mpce-theme] .mpce-sem-inherited * {
+:root[data-mpce-theme] .mpce-sem-inherited {
   color: var(--mpce-accent5);
   font-style: italic;
+}
+
+/* Punctuation the grammar folds into other tokens: string quotes, colons,
+   `->` and the decorator `@`. String prefixes (r, b, f) are storage types. */
+:root[data-mpce-theme] .mpce-sem-punct {
+  color: var(--mpce-dimmed2);
+  font-style: normal;
+}
+
+:root[data-mpce-theme] .mpce-sem-regexQuote {
+  color: var(--mpce-accent1);
+  font-style: normal;
+}
+
+:root[data-mpce-theme] .mpce-sem-prefix {
+  color: var(--mpce-accent5);
+  font-style: italic;
+}
+
+/* ---- Rainbow brackets (src/syntax.ts) ------------------------------------
+   VS Code colors bracket pairs by nesting depth by default; Monokai Pro's
+   sequence is its six accents. */
+
+:root[data-mpce-theme] .mpce-bracket-0 {
+  color: var(--mpce-accent1);
+}
+
+:root[data-mpce-theme] .mpce-bracket-1 {
+  color: var(--mpce-accent2);
+}
+
+:root[data-mpce-theme] .mpce-bracket-2 {
+  color: var(--mpce-accent3);
+}
+
+:root[data-mpce-theme] .mpce-bracket-3 {
+  color: var(--mpce-accent4);
+}
+
+:root[data-mpce-theme] .mpce-bracket-4 {
+  color: var(--mpce-accent5);
+}
+
+:root[data-mpce-theme] .mpce-bracket-5 {
+  color: var(--mpce-accent6);
+}
+
+/* Matching bracket: outlined, as editorBracketMatch.border */
+:root[data-mpce-theme] .cm-editor.cm-focused .cm-matchingBracket {
+  background: transparent;
+  outline: 1px solid var(--mpce-dimmed3);
+  outline-offset: -1px;
 }
 
 /* ---- ANSI colors in outputs ---------------------------------------------
@@ -288,9 +332,43 @@
 
 /* Text on a colored ANSI background with no explicit foreground would
    otherwise inherit the default text color and become illegible. */
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-red-bg:not([class*='-fg']),
 :root[data-mpce-theme]
   .jp-RenderedText
   pre
-  [class*='ansi-'][class*='-bg']:not([class*='-fg'], [class*='ansi-black']) {
+  .ansi-red-intense-bg:not([class*='-fg']),
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-green-bg:not([class*='-fg']),
+:root[data-mpce-theme]
+  .jp-RenderedText
+  pre
+  .ansi-green-intense-bg:not([class*='-fg']),
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-yellow-bg:not([class*='-fg']),
+:root[data-mpce-theme]
+  .jp-RenderedText
+  pre
+  .ansi-yellow-intense-bg:not([class*='-fg']),
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-blue-bg:not([class*='-fg']),
+:root[data-mpce-theme]
+  .jp-RenderedText
+  pre
+  .ansi-blue-intense-bg:not([class*='-fg']),
+:root[data-mpce-theme]
+  .jp-RenderedText
+  pre
+  .ansi-magenta-bg:not([class*='-fg']),
+:root[data-mpce-theme]
+  .jp-RenderedText
+  pre
+  .ansi-magenta-intense-bg:not([class*='-fg']),
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-cyan-bg:not([class*='-fg']),
+:root[data-mpce-theme]
+  .jp-RenderedText
+  pre
+  .ansi-cyan-intense-bg:not([class*='-fg']),
+:root[data-mpce-theme] .jp-RenderedText pre .ansi-white-bg:not([class*='-fg']),
+:root[data-mpce-theme]
+  .jp-RenderedText
+  pre
+  .ansi-white-intense-bg:not([class*='-fg']) {
   color: var(--mpce-background);
 }

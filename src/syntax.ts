@@ -135,7 +135,13 @@ type Semantic =
   | 'docstring'
   | 'decorator'
   | 'inherited'
-  | 'type';
+  | 'type'
+  | 'punct'
+  | 'regexQuote'
+  | 'prefix';
+
+/** String prefix and opening quotes, e.g. `rb'` or `f"""`. */
+const STRING_OPEN = /^([a-zA-Z]*)("""|'''|"|')/;
 
 function isBaseClassList(node: SyntaxNode | null): boolean {
   return node?.name === 'ArgList' && node.parent?.name === 'ClassDefinition';
@@ -162,9 +168,65 @@ function walkPythonSemantics(
       }
 
       if (name === 'Decorator') {
-        // Color `@name.attr`, leaving any call arguments to the rules below.
+        // `@` is punctuation; color `name.attr`, leaving any call arguments
+        // to the rules below
+        const at = ref.node.getChild('At');
         const args = ref.node.getChild('ArgList');
-        emit(ref.from, args ? args.from : ref.to, 'decorator');
+        if (at) {
+          emit(at.from, at.to, 'punct');
+        }
+        emit(at ? at.to : ref.from, args ? args.from : ref.to, 'decorator');
+        return;
+      }
+
+      // Colons, and the `->` of return annotations (not a node of its own)
+      if (name === ':') {
+        emit(ref.from, ref.to, 'punct');
+        return;
+      }
+      if (
+        name === 'TypeDef' &&
+        ref.node.parent?.name === 'FunctionDefinition' &&
+        slice(ref.from, ref.from + 2) === '->'
+      ) {
+        emit(ref.from, ref.from + 2, 'punct');
+        return;
+      }
+
+      // String prefixes (r, b, f, ...) and quotes; the contents keep the
+      // string color. As in VS Code's grammar, f-string quotes keep the
+      // string color and raw strings are regular expressions, whose quotes
+      // are red.
+      if (name === 'String' || name === 'FormatString') {
+        const text = slice(ref.from, ref.to);
+        const open = STRING_OPEN.exec(text);
+        if (open) {
+          const [, prefix, quote] = open;
+          if (prefix) {
+            emit(ref.from, ref.from + prefix.length, 'prefix');
+          }
+          const quotes: Semantic | null = /f/i.test(prefix)
+            ? null
+            : /r/i.test(prefix)
+              ? 'regexQuote'
+              : 'punct';
+          const start = ref.from + prefix.length;
+          if (quotes) {
+            emit(start, start + quote.length, quotes);
+            if (
+              text.length >= prefix.length + quote.length * 2 &&
+              text.endsWith(quote)
+            ) {
+              emit(ref.to - quote.length, ref.to, quotes);
+            }
+          }
+        }
+        return;
+      }
+
+      // f-string conversions (!r, !s) are storage types
+      if (name === 'FormatConversion') {
+        emit(ref.from, ref.to, 'prefix');
         return;
       }
 
@@ -218,52 +280,272 @@ function walkPythonSemantics(
   });
 }
 
-const marks: Record<Semantic, Decoration> = {
-  param: Decoration.mark({ class: 'mpce-sem-param' }),
-  self: Decoration.mark({ class: 'mpce-sem-self' }),
-  keyword: Decoration.mark({ class: 'mpce-sem-keyword' }),
-  docstring: Decoration.mark({ class: 'mpce-sem-docstring' }),
-  decorator: Decoration.mark({ class: 'mpce-sem-decorator' }),
-  inherited: Decoration.mark({ class: 'mpce-sem-inherited' }),
-  type: Decoration.mark({ class: 'mpce-sem-type' })
-};
+const OPENING = new Set(['(', '[', '{']);
+const CLOSING = new Set([')', ']', '}']);
 
-function pythonDecorations(view: EditorView): DecorationSet {
-  if (view.state.facet(language)?.name !== 'python') {
-    return Decoration.none;
-  }
-  const doc = view.state.doc;
-  const builder = new RangeSetBuilder<Decoration>();
-  walkPythonSemantics(
-    syntaxTree(view.state),
-    (from, to) => doc.sliceString(from, to),
-    (from, to, kind) => builder.add(from, to, marks[kind]),
-    view.viewport
-  );
-  return builder.finish();
+/**
+ * Rainbow brackets, as VS Code colors them by default: each bracket gets
+ * `mpce-bracket-<depth mod 6>`.
+ *
+ * One pass in document order with a depth counter. Brackets inside strings
+ * and comments aren't syntax nodes, so they're skipped naturally, while
+ * f-string placeholders are, matching VS Code. With a range (the viewport),
+ * whole subtrees before it are skipped: their brackets are balanced, so only
+ * the enclosing nodes' brackets affect the depth. Returns the depth reached.
+ */
+function walkBrackets(
+  tree: Tree,
+  emit: (from: number, to: number, cls: string) => void,
+  range?: { from: number; to: number }
+): number {
+  let depth = 0;
+  tree.iterate({
+    to: range?.to,
+    enter: ref => {
+      const opening = OPENING.has(ref.name);
+      if (opening || CLOSING.has(ref.name)) {
+        if (!opening) {
+          depth = Math.max(0, depth - 1);
+        }
+        if (!range || ref.from >= range.from) {
+          emit(ref.from, ref.to, `mpce-bracket-${depth % 6}`);
+        }
+        if (opening) {
+          depth++;
+        }
+        return;
+      }
+      if (range && ref.to <= range.from) {
+        return false;
+      }
+    }
+  });
+  return depth;
 }
 
-const pythonSemantics = ViewPlugin.fromClass(
+/** The bracket depth after the brackets that start at or before `pos`. */
+function bracketDepth(tree: Tree, pos: number): number {
+  return walkBrackets(tree, () => undefined, { from: pos, to: pos });
+}
+
+/**
+ * Every class range this module adds to a syntax tree, sorted by position:
+ * rainbow brackets for any language, plus Python semantics.
+ */
+function classRanges(
+  tree: Tree,
+  isPython: boolean,
+  slice: (from: number, to: number) => string,
+  range?: { from: number; to: number }
+): [number, number, string][] {
+  const ranges: [number, number, string][] = [];
+  if (isPython) {
+    walkPythonSemantics(
+      tree,
+      slice,
+      (from, to, kind) => ranges.push([from, to, `mpce-sem-${kind}`]),
+      range
+    );
+  }
+  walkBrackets(tree, (from, to, cls) => ranges.push([from, to, cls]), range);
+  // e.g. a string's closing quote is reported before what it contains
+  return ranges.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+}
+
+const markCache = new Map<string, Decoration>();
+function mark(cls: string): Decoration {
+  let deco = markCache.get(cls);
+  if (!deco) {
+    deco = Decoration.mark({ class: cls });
+    markCache.set(cls, deco);
+  }
+  return deco;
+}
+
+type Range = { from: number; to: number };
+
+/** Statements, including compound statements and definitions. */
+const STATEMENT = /Statement$|Definition$/;
+
+/**
+ * Edits containing these can change how far a string, comment or statement
+ * extends, so they always redecorate the whole viewport.
+ */
+const STRUCTURAL = /['"#\\\n]/;
+
+/** The innermost statement around `from`-`to`, or the whole document. */
+function statementAround(tree: Tree, from: number, to: number): Range {
+  for (
+    let node: SyntaxNode | null = tree.resolveInner(from, from < to ? 1 : -1);
+    node;
+    node = node.parent
+  ) {
+    if (node.to >= to && STATEMENT.test(node.name)) {
+      return node;
+    }
+  }
+  return { from: 0, to: tree.length };
+}
+
+const overlaps = (from: number, to: number, range: Range) =>
+  from < range.to && to > range.from;
+
+/**
+ * The parts of the new document to redecorate after an ordinary edit, sorted
+ * and disjoint, or null if the edit may affect more than its statement.
+ */
+function changedRegions(
+  update: ViewUpdate,
+  oldTree: Tree,
+  tree: Tree
+): Range[] | null {
+  const { changes, startState, state } = update;
+  if (tree.length < state.doc.length) {
+    // Still parsing; the tree will update again
+    return null;
+  }
+  const regions: Range[] = [];
+  let simple = true;
+  changes.iterChanges((fromA, toA, fromB, toB, inserted) => {
+    if (!simple) {
+      return;
+    }
+    const line = state.doc.lineAt(fromB);
+    if (
+      STRUCTURAL.test(inserted.toString()) ||
+      STRUCTURAL.test(startState.doc.sliceString(fromA, toA)) ||
+      // Indentation decides which block a line belongs to
+      !state.doc.sliceString(line.from, fromB).trim()
+    ) {
+      simple = false;
+      return;
+    }
+    const before = statementAround(oldTree, fromA, toA);
+    const after = statementAround(tree, fromB, toB);
+    const region = {
+      from: Math.min(changes.mapPos(before.from, -1), after.from),
+      to: Math.max(changes.mapPos(before.to, 1), after.to)
+    };
+    // Brackets after the statement keep their colors only if it nests
+    // them as deeply as before
+    if (
+      bracketDepth(oldTree, changes.invertedDesc.mapPos(region.to, 1)) !==
+      bracketDepth(tree, region.to)
+    ) {
+      simple = false;
+      return;
+    }
+    regions.push(region);
+  });
+  if (!simple) {
+    return null;
+  }
+  regions.sort((a, b) => a.from - b.from);
+  const merged: Range[] = [];
+  for (const region of regions) {
+    const last = merged[merged.length - 1];
+    if (last && region.from <= last.to) {
+      last.to = Math.max(last.to, region.to);
+    } else {
+      merged.push({ ...region });
+    }
+  }
+  return merged;
+}
+
+/**
+ * Maintains the semantic and bracket marks for the viewport.
+ *
+ * Rebuilding them is cheap but runs on every keystroke, so ordinary typing
+ * only rebuilds the statement being edited: the statement around each change
+ * in the old and new syntax trees, which covers any restructuring the edit
+ * caused. Edits that may reach past that statement (quotes, comments, line
+ * breaks, indentation, or a change in bracket depth) rebuild the viewport.
+ */
+const semantics = ViewPlugin.fromClass(
   class {
-    decorations: DecorationSet;
+    decorations: DecorationSet = Decoration.none;
     private tree: Tree;
+    /** The document range the decorations are up to date for. */
+    private covered: Range = { from: 0, to: 0 };
 
     constructor(view: EditorView) {
       this.tree = syntaxTree(view.state);
-      this.decorations = pythonDecorations(view);
+      this.rebuild(view);
     }
 
     update(update: ViewUpdate) {
-      const tree = syntaxTree(update.state);
-      if (
-        update.docChanged ||
-        update.viewportChanged ||
-        tree !== this.tree ||
-        update.startState.facet(language) !== update.state.facet(language)
+      const oldTree = this.tree;
+      const tree = (this.tree = syntaxTree(update.state));
+      const { viewport } = update.view;
+
+      if (update.startState.facet(language) !== update.state.facet(language)) {
+        this.rebuild(update.view);
+      } else if (update.docChanged) {
+        // Text inserted at either end is covered by its changed region
+        const covered = {
+          from: update.changes.mapPos(this.covered.from, -1),
+          to: update.changes.mapPos(this.covered.to, 1)
+        };
+        const regions =
+          viewport.from >= covered.from && viewport.to <= covered.to
+            ? changedRegions(update, oldTree, tree)
+            : null;
+        if (regions) {
+          this.decorations = this.decorations.map(update.changes);
+          this.covered = covered;
+          for (const region of regions) {
+            this.redecorate(update.view, region);
+          }
+        } else {
+          this.rebuild(update.view);
+        }
+      } else if (
+        tree !== oldTree ||
+        viewport.from < this.covered.from ||
+        viewport.to > this.covered.to
       ) {
-        this.tree = tree;
-        this.decorations = pythonDecorations(update.view);
+        this.rebuild(update.view);
       }
+    }
+
+    /** Decorate the viewport from scratch. */
+    private rebuild(view: EditorView) {
+      const builder = new RangeSetBuilder<Decoration>();
+      for (const [from, to, cls] of this.classRanges(view, view.viewport)) {
+        builder.add(from, to, mark(cls));
+      }
+      this.decorations = builder.finish();
+      this.covered = view.viewport;
+    }
+
+    /** Replace the decorations in part of the covered range. */
+    private redecorate(view: EditorView, range: Range) {
+      const region = {
+        from: Math.max(range.from, this.covered.from),
+        to: Math.min(range.to, this.covered.to)
+      };
+      if (region.from >= region.to) {
+        return;
+      }
+      this.decorations = this.decorations.update({
+        filterFrom: region.from,
+        filterTo: region.to,
+        filter: (from, to) => !overlaps(from, to, region),
+        add: this.classRanges(view, region)
+          .filter(([from, to]) => overlaps(from, to, region))
+          .map(([from, to, cls]) => mark(cls).range(from, to))
+      });
+    }
+
+    private classRanges(view: EditorView, range: Range) {
+      const doc = view.state.doc;
+      return classRanges(
+        this.tree,
+        view.state.facet(language)?.name === 'python',
+        (from, to) => doc.sliceString(from, to),
+        range
+      );
     }
   },
   { decorations: v => v.decorations }
@@ -276,7 +558,7 @@ const pythonSemantics = ViewPlugin.fromClass(
  * innermost spans, inside the highlighter's token spans.
  */
 export function monokaiSyntax(): Extension {
-  return [syntaxHighlighting(tokenHighlighter), Prec.highest(pythonSemantics)];
+  return [syntaxHighlighting(tokenHighlighter), Prec.highest(semantics)];
 }
 
 /**
@@ -304,49 +586,55 @@ export function extendStaticHighlighting(
       }
 
       const tree = parser.parse(code);
+      const isPython = resolved?.support?.language.name === 'python';
 
-      // Python semantics, as [from, to, class] in document order. Every
-      // range covers whole highlighted tokens, so each token span can just
-      // pick up the classes of the ranges containing it.
-      const semantics: [number, number, string][] = [];
-      if (resolved?.support?.language.name === 'python') {
-        walkPythonSemantics(
-          tree,
-          (from, to) => code.slice(from, to),
-          (from, to, kind) => semantics.push([from, to, `mpce-sem-${kind}`])
-        );
-      }
-      let next = 0;
-
-      const fragment = document.createDocumentFragment();
-      let pos = 0;
+      // Highlighter classes per token, plus this module's class ranges,
+      // which may cover part of a token (a string's quotes) or text the
+      // highlighter leaves unstyled (a colon). Split the code at every
+      // boundary and give each piece the classes covering it.
+      const spans: [number, number, string][] = [];
       highlightTree(
         tree,
         [jupyterHighlightStyle, tokenHighlighter],
-        (from, to, classes) => {
-          if (from > pos) {
-            fragment.append(code.slice(pos, from));
-          }
-          while (next < semantics.length && semantics[next][1] <= from) {
-            next++;
-          }
-          for (let i = next; i < semantics.length; i++) {
-            const [start, end, cls] = semantics[i];
-            if (start > from) {
-              break;
-            }
-            if (end >= to) {
-              classes += ` ${cls}`;
-            }
-          }
+        (from, to, classes) => spans.push([from, to, classes])
+      );
+      const ranges = [
+        ...spans,
+        ...classRanges(tree, isPython, (from, to) => code.slice(from, to))
+      ];
+      // Sweep the boundaries once, tracking which ranges cover each piece
+      const cuts = new Set([0, code.length]);
+      for (const [from, to] of ranges) {
+        cuts.add(from);
+        cuts.add(to);
+      }
+      const points = [...cuts].sort((a, b) => a - b);
+      ranges.sort((a, b) => a[0] - b[0]);
+
+      const fragment = document.createDocumentFragment();
+      let active: [number, number, string][] = [];
+      let next = 0;
+      for (let i = 0; i < points.length - 1; i++) {
+        const from = points[i];
+        const to = points[i + 1];
+        while (next < ranges.length && ranges[next][0] <= from) {
+          active.push(ranges[next++]);
+        }
+        active = active.filter(([, end]) => end > from);
+        const classes = active
+          .filter(([, end]) => end >= to)
+          .map(([, , cls]) => cls)
+          .join(' ');
+        const text = code.slice(from, to);
+        if (classes) {
           const span = document.createElement('span');
           span.className = classes;
-          span.textContent = code.slice(from, to);
+          span.textContent = text;
           fragment.append(span);
-          pos = to;
+        } else {
+          fragment.append(text);
         }
-      );
-      fragment.append(code.slice(pos));
+      }
       el.appendChild(fragment);
     } catch (reason) {
       console.warn(

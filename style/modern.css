@@ -444,6 +444,7 @@
 :root[data-mpce-modern] #jp-down-stack > .lm-TabBar .lm-TabBar-tab,
 :root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab {
   /* size to the title, as VS Code does */
+  width: auto;
   flex: 0 1 auto;
   max-width: 240px;
   padding: 0 6px 0 10px;
@@ -566,6 +567,13 @@
   border-top: none;
 }
 
+/* Status bar text: VS Code's 12px dimmed grey */
+:root[data-mpce-modern] .jp-StatusBar-Item,
+:root[data-mpce-modern] .jp-StatusBar-TextItem {
+  font-size: 12px;
+  color: var(--mpce-dimmed3, var(--jp-ui-font-color2));
+}
+
 /* ---- Lists ---------------------------------------------------------------
    Rows are inset and rounded, so selection reads as a pill. */
 
@@ -575,6 +583,9 @@
 
 :root[data-mpce-modern] .jp-DirListing-item {
   border-radius: var(--mm-radius-sm);
+
+  /* 22px rows, as VS Code's lists */
+  padding-block: 3px;
 }
 
 :root[data-mpce-modern] .jp-DirListing-header {
@@ -689,16 +700,29 @@
   overflow: hidden;
 }
 
+/* VS Code's airier rhythm: 24px between cells (as padding, which the
+   notebook's windowing measures) and code inset from the cell outline */
+:root[data-mpce-modern] .jp-Notebook .jp-Cell {
+  padding-block: 12px;
+  border-radius: var(--mm-radius-lg);
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-InputArea-editor .cm-content {
+  padding-inline-start: 16px;
+}
+
 /* Gutter: the run button sits above the execution count */
 :root[data-mpce-modern] .jp-Notebook .jp-InputPrompt {
+  /* run button at the top, execution count at the bottom, as in VS Code */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 2px 0 0;
+  justify-content: space-between;
+  padding: 2px 0 4px;
   text-align: center;
   font-size: 10px;
-  opacity: 0.75;
+  color: var(--jp-ui-font-color0);
+  opacity: 0.7;
 }
 
 :root[data-mpce-modern] .jp-Notebook .jp-CodeCell .jp-InputPrompt::before {
@@ -777,10 +801,6 @@
 }
 
 /* Command-mode focus and multi-selection read as rounded cards */
-:root[data-mpce-modern] .jp-Notebook .jp-Cell {
-  border-radius: var(--mm-radius-lg);
-}
-
 :root[data-mpce-modern]
   .jp-Notebook.jp-mod-commandMode
   .jp-Cell.jp-mod-active:focus-visible {

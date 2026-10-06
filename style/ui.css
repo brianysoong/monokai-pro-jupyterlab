@@ -216,7 +216,8 @@
 }
 
 :root[data-mpce-theme] .jp-DirListing-item.jp-mod-selected {
-  background: rgba(var(--mpce-overlay-rgb), 0.08);
+  /* list.activeSelectionBackground */
+  background: rgba(var(--mpce-overlay-rgb), 0.05);
   color: var(--mpce-highlight);
 }
 

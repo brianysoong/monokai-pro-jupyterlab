@@ -110,7 +110,7 @@ CONTEXT = """\
   .lm-TabBar-tab.jp-mod-dirty
   > .lm-TabBar-tabCloseIcon
   > svg:not(:hover)
-  > * {
+  > :is(path, g, circle, ellipse, rect, line, polyline, polygon) {
   visibility: visible;
 }
 
@@ -119,6 +119,12 @@ CONTEXT = """\
   color: var(--jp-ui-font-color1);
 }
 """
+
+
+# Elements that make up JupyterLab's own icon artwork, hidden under the
+# Codicon. Named rather than matched with `*`: the browser checks rules ending
+# in `*` against every element it restyles, such as each keystroke's spans.
+ARTWORK = ("path", "g", "circle", "ellipse", "rect", "line", "polyline", "polygon")
 
 
 def data_uri(svg: str) -> str:
@@ -130,7 +136,11 @@ def main() -> None:
     names = sorted(MAPPING)
     selector = lambda n: f"svg[data-icon='ui-components:{n}']"
     all_icons = ",\n".join(f":root[data-mpce-codicons] {selector(n)}" for n in names)
-    children = ",\n".join(f":root[data-mpce-codicons] {selector(n)} > *" for n in names)
+    children = ",\n".join(
+        f":root[data-mpce-codicons] {selector(n)} > {tag}"
+        for n in names
+        for tag in ARTWORK
+    )
 
     out = [HEADER]
     out.append(f"{all_icons} {{\n  background-color: currentcolor;\n"
