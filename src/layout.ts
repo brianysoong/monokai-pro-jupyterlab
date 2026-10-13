@@ -64,6 +64,24 @@ function downArea(shell: ILabShell) {
   };
 }
 
+const inPanel = (w: Widget | null) => !!w?.node.closest('#jp-down-stack');
+
+/**
+ * Move terminals that are outside the bottom panel into it, such as those a
+ * workspace saved before they were routed there restores to the main area.
+ * The bottom panel is a plain tab panel, so tabs cannot be dragged into it.
+ */
+export function dockTerminals(
+  shell: ILabShell,
+  terminals: ITerminalTracker
+): void {
+  terminals.forEach(widget => {
+    if (!widget.isDisposed && !inPanel(widget)) {
+      shell.add(widget, 'down');
+    }
+  });
+}
+
 /**
  * Move new terminals into the bottom panel, where VS Code keeps its
  * terminal. JupyterLab adds a terminal to the main area before tracking it,
@@ -90,14 +108,16 @@ export function routeTerminalsToPanel(
  *   to the document.
  * - new (Ctrl+Shift+`): open another terminal.
  *
- * Terminals land in the bottom panel when the Modern UI routes them there;
+ * Terminals land in the bottom panel when the Modern UI routes them there
+ * (`routed`), and toggling first moves any stray terminal into it;
  * otherwise these act on terminals wherever they are.
  */
 export function addTerminalCommands(
   commands: CommandRegistry,
   shell: ILabShell,
   terminals: ITerminalTracker,
-  trans: TranslationBundle
+  trans: TranslationBundle,
+  routed: () => boolean
 ): void {
   // The document to return to when the terminal is hidden
   let lastDocument: Widget | null = null;
@@ -107,7 +127,6 @@ export function addTerminalCommands(
     }
   });
 
-  const inPanel = (w: Widget | null) => !!w?.node.closest('#jp-down-stack');
   // Prefer the terminal showing in the bottom panel, then any in the panel,
   // then any terminal at all
   const panelTerminal = () => {
@@ -134,6 +153,9 @@ export function addTerminalCommands(
     label: trans.__('Toggle Terminal'),
     describedBy: { args: { type: 'object', properties: {} } },
     execute: async () => {
+      if (routed()) {
+        dockTerminals(shell, terminals);
+      }
       const terminal = panelTerminal();
       if (!terminal) {
         await commands.execute('terminal:create-new');

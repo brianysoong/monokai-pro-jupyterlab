@@ -33,6 +33,7 @@ import {
 import {
   addNewTerminalButton,
   addTerminalCommands,
+  dockTerminals,
   refitShell,
   routeTerminalsToPanel
 } from './layout';
@@ -152,19 +153,17 @@ const plugin: JupyterFrontEndPlugin<void> = {
       : () => undefined;
 
     let terminalsInPanel = true;
+    const routed = () =>
+      terminalsInPanel && root.hasAttribute('data-mpce-modern');
     if (labShell && terminals) {
-      addTerminalCommands(app.commands, labShell, terminals, trans);
+      addTerminalCommands(app.commands, labShell, terminals, trans, routed);
       for (const command of [
         'monokai-pro-ce:toggle-terminal',
         'monokai-pro-ce:new-terminal'
       ]) {
         palette?.addItem({ command, category: trans.__('Terminal') });
       }
-      routeTerminalsToPanel(
-        labShell,
-        terminals,
-        () => terminalsInPanel && root.hasAttribute('data-mpce-modern')
-      );
+      routeTerminalsToPanel(labShell, terminals, routed);
     }
 
     root.dataset.mpceFigureBackground = 'white';
@@ -185,6 +184,15 @@ const plugin: JupyterFrontEndPlugin<void> = {
           'data-mpce-codicons',
           modern && codicons !== false
         );
+        // Terminals restored before the settings loaded, or opened while
+        // routing was off, join the bottom panel once the layout is restored
+        if (labShell && terminals) {
+          void app.restored.then(() => {
+            if (routed()) {
+              dockTerminals(labShell, terminals);
+            }
+          });
+        }
       };
       settingRegistry
         .load(PLUGIN_ID)
