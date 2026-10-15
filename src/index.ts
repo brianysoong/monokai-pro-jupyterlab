@@ -30,8 +30,10 @@ import {
   MenuButton,
   TitleBarLayout
 } from './header';
+// The terminal commands and panel buttons are also registered at once
+// eslint-disable-next-line jupyter/prefer-lazy-imports
 import {
-  addNewTerminalButton,
+  addPanelButtons,
   addTerminalCommands,
   dockTerminals,
   refitShell,
@@ -148,8 +150,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const titleBar = labShell ? new TitleBarLayout(labShell) : null;
     void app.restored.then(() => titleBar?.refresh());
 
-    const setNewTerminalButton = labShell
-      ? addNewTerminalButton(app.commands, labShell, trans)
+    const setPanelButtons = labShell
+      ? addPanelButtons(app.commands, labShell, trans)
       : () => undefined;
 
     let terminalsInPanel = true;
@@ -159,7 +161,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
       addTerminalCommands(app.commands, labShell, terminals, trans, routed);
       for (const command of [
         'monokai-pro-ce:toggle-terminal',
-        'monokai-pro-ce:new-terminal'
+        'monokai-pro-ce:new-terminal',
+        'monokai-pro-ce:hide-panel'
       ]) {
         palette?.addItem({ command, category: trans.__('Terminal') });
       }
@@ -178,7 +181,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
           root.toggleAttribute('data-mpce-modern', modern);
           refitShell(app.shell);
           titleBar?.refresh();
-          setNewTerminalButton(modern);
+          setPanelButtons(modern);
         }
         root.toggleAttribute(
           'data-mpce-codicons',

@@ -11,7 +11,7 @@ import { ITerminal, ITerminalTracker } from '@jupyterlab/terminal';
 import { TranslationBundle } from '@jupyterlab/translation';
 import { CommandRegistry } from '@lumino/commands';
 import { MessageLoop } from '@lumino/messaging';
-import { TabPanel, Widget } from '@lumino/widgets';
+import { SplitPanel, TabPanel, Widget } from '@lumino/widgets';
 
 function fitTree(widget: Widget): void {
   for (const child of widget.children()) {
@@ -48,7 +48,8 @@ function focusTerminal(
 
 /**
  * Collapse and expand the bottom panel. JupyterLab 4.6 added public
- * methods for this; older releases only have the shell's private panel.
+ * methods for this, which keep the panel's size; older releases only have
+ * the shell's private panels, so the size is kept here.
  */
 function downArea(shell: ILabShell) {
   const api = shell as unknown as {
@@ -56,11 +57,31 @@ function downArea(shell: ILabShell) {
     collapseDown?: () => void;
     expandDown?: () => void;
   };
-  const panel = (shell as unknown as { _downPanel?: Widget })._downPanel;
+  const { _downPanel: panel, _vsplitPanel: split } = shell as unknown as {
+    _downPanel?: Widget;
+    _vsplitPanel?: SplitPanel;
+  };
+  let sizes: number[] | null = null;
   return {
     collapsed: () => api.downCollapsed ?? panel?.isHidden ?? false,
-    collapse: () => (api.collapseDown ? api.collapseDown() : panel?.hide()),
-    expand: () => (api.expandDown ? api.expandDown() : panel?.show())
+    collapse: () => {
+      if (api.collapseDown) {
+        api.collapseDown();
+      } else if (panel && !panel.isHidden) {
+        sizes = split?.relativeSizes() ?? null;
+        panel.hide();
+      }
+    },
+    expand: () => {
+      if (api.expandDown) {
+        api.expandDown();
+      } else if (panel?.isHidden) {
+        panel.show();
+        if (sizes) {
+          split?.setRelativeSizes(sizes);
+        }
+      }
+    }
   };
 }
 
@@ -107,6 +128,7 @@ export function routeTerminalsToPanel(
  *   focus it, or, if it already has focus, hide the bottom panel and return
  *   to the document.
  * - new (Ctrl+Shift+`): open another terminal.
+ * - hide panel: hide the bottom panel, as its close button does.
  *
  * Terminals land in the bottom panel when the Modern UI routes them there
  * (`routed`), and toggling first moves any stray terminal into it;
@@ -179,6 +201,19 @@ export function addTerminalCommands(
     }
   });
 
+  commands.addCommand('monokai-pro-ce:hide-panel', {
+    label: trans.__('Hide Panel'),
+    describedBy: { args: { type: 'object', properties: {} } },
+    isEnabled: () => !down.collapsed(),
+    execute: () => {
+      const focused = !!document.activeElement?.closest('#jp-down-stack');
+      down.collapse();
+      if (focused) {
+        returnToDocument();
+      }
+    }
+  });
+
   commands.addCommand('monokai-pro-ce:new-terminal', {
     label: trans.__('New Terminal'),
     describedBy: { args: { type: 'object', properties: {} } },
@@ -187,12 +222,13 @@ export function addTerminalCommands(
 }
 
 /**
- * Show the tab bar's built-in "+" button on the bottom panel (as on the
- * document tabs), opening a new terminal like VS Code's terminal panel.
- * JupyterLab doesn't expose the bottom panel publicly, so this reaches its
- * private panel and does nothing if that is missing.
+ * The bottom panel's buttons, as on VS Code's panel: the tab bar's built-in
+ * "+" (as on the document tabs), opening a new terminal, and a button at
+ * the far end that hides the panel. JupyterLab doesn't expose the bottom
+ * panel publicly, so this reaches its private panel and does nothing if
+ * that is missing.
  */
-export function addNewTerminalButton(
+export function addPanelButtons(
   commands: CommandRegistry,
   shell: ILabShell,
   trans: TranslationBundle
@@ -210,7 +246,22 @@ export function addNewTerminalButton(
   const label = trans.__('New Terminal');
   button?.setAttribute('title', label);
   button?.setAttribute('aria-label', label);
+
+  const hide = document.createElement('button');
+  hide.className = 'mpce-PanelHideButton';
+  hide.hidden = true;
+  const hideLabel = trans.__('Hide Panel');
+  hide.setAttribute('title', hideLabel);
+  hide.setAttribute('aria-label', hideLabel);
+  // The tab bar handles pointer presses to drag tabs; keep this one a click
+  hide.addEventListener('pointerdown', event => event.stopPropagation());
+  hide.addEventListener('click', () => {
+    void commands.execute('monokai-pro-ce:hide-panel');
+  });
+  tabBar.node.appendChild(hide);
+
   return enabled => {
     tabBar.addButtonEnabled = enabled;
+    hide.hidden = !enabled;
   };
 }
