@@ -2,7 +2,8 @@
  * VS Code-style run button in the notebook gutter.
  *
  * The button itself is drawn by style/modern.css as a pseudo-element at the
- * top of each code cell's input prompt, so it survives JupyterLab
+ * top of each code cell's input prompt (the input area's own, not any
+ * prompt an extension nests inside it), so it survives JupyterLab
  * re-rendering the prompt. This module only handles clicks on it: one
  * delegated listener per notebook, active only while the Modern UI is on.
  */
@@ -19,7 +20,7 @@ export function enableGutterRunButtons(tracker: INotebookTracker): void {
         return;
       }
       const prompt = (event.target as HTMLElement).closest?.(
-        '.jp-CodeCell .jp-InputPrompt'
+        '.jp-CodeCell .jp-InputArea-prompt'
       );
       if (
         !prompt ||

@@ -752,7 +752,7 @@
 }
 
 /* Gutter: the run button sits above the execution count */
-:root[data-mpce-modern] .jp-Notebook .jp-InputPrompt {
+:root[data-mpce-modern] .jp-Notebook .jp-InputArea-prompt {
   /* run button at the top, execution count at the bottom, as in VS Code */
   display: flex;
   flex-direction: column;
@@ -765,7 +765,19 @@
   opacity: 0.7;
 }
 
-:root[data-mpce-modern] .jp-Notebook .jp-CodeCell .jp-InputPrompt::before {
+/* Extensions that add widgets to the prompt (e.g. jupyterlab-favorites'
+   star, which moves the execution count into a widget of its own) lay them
+   out absolutely; let them flow in the gutter column instead */
+:root[data-mpce-modern] .jp-Notebook .jp-InputArea-prompt > .lm-Widget {
+  position: static !important;
+  contain: none !important;
+  width: auto !important;
+  height: auto !important;
+  flex: none;
+  padding: 0;
+}
+
+:root[data-mpce-modern] .jp-Notebook .jp-CodeCell .jp-InputArea-prompt::before {
   content: '';
   flex: 0 0 auto;
   width: 22px;
@@ -778,18 +790,21 @@
   transition: opacity 0.1s;
 }
 
-:root[data-mpce-modern] .jp-Notebook .jp-CodeCell:hover .jp-InputPrompt::before,
+:root[data-mpce-modern]
+  .jp-Notebook
+  .jp-CodeCell:hover
+  .jp-InputArea-prompt::before,
 :root[data-mpce-modern]
   .jp-Notebook
   .jp-CodeCell.jp-mod-active
-  .jp-InputPrompt::before {
+  .jp-InputArea-prompt::before {
   opacity: 1;
 }
 
 :root[data-mpce-modern]
   .jp-Notebook
   .jp-CodeCell
-  .jp-InputPrompt:hover::before {
+  .jp-InputArea-prompt:hover::before {
   background-color: var(--mm-active-fg);
 }
 
