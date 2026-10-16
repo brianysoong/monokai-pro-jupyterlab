@@ -8,11 +8,25 @@ Install into the Python environment that runs JupyterLab (4.0 or newer). The rep
 pip install git+https://github.com/brianysoong/monokai-pro-jupyterlab.git
 ```
 
-To update, reinstall. The version number doesn't change between commits, so tell pip to reinstall anyway:
+To install a specific release instead of the latest commit, add its tag (see [Releases](https://github.com/brianysoong/monokai-pro-jupyterlab/releases)):
+
+```bash
+pip install git+https://github.com/brianysoong/monokai-pro-jupyterlab.git@v0.1.0
+```
+
+To update to a newer release, upgrade:
+
+```bash
+pip install --upgrade --no-deps git+https://github.com/brianysoong/monokai-pro-jupyterlab.git
+```
+
+Changes between releases keep the same version number, so to pick those up, tell pip to reinstall anyway:
 
 ```bash
 pip install --force-reinstall --no-deps git+https://github.com/brianysoong/monokai-pro-jupyterlab.git
 ```
+
+Then reload JupyterLab (restart the server first if it was running during the install).
 
 #### Machines without internet access
 
