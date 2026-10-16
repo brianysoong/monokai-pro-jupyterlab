@@ -323,7 +323,11 @@
 }
 
 :root[data-mpce-modern] .jp-SideBar.lm-TabBar::after {
-  display: none;
+  /* JupyterLab draws the activity bar's edge with this overlay. Hide only
+     its border: removing the pseudo-element (display: none) makes Chrome
+     on macOS crash when the Settings Editor opens via Cmd+, with the
+     terminal panel open. */
+  border: none;
 }
 
 :root[data-mpce-modern] .jp-SideBar.jp-mod-left {
@@ -401,7 +405,7 @@
 }
 
 :root[data-mpce-modern] .jp-SideBar .lm-TabBar-tab.lm-mod-current::after {
-  display: none;
+  border: none;
 }
 
 :root[data-mpce-modern] .jp-SideBar .lm-TabBar-tabIcon {
@@ -464,7 +468,10 @@
 :root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab::before,
 :root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-tab::after,
 :root[data-mpce-modern] .lm-DockPanel-tabBar .lm-TabBar-addButton::after {
-  display: none;
+  /* Hide JupyterLab's tab edges by their paint, keeping the elements (see
+     the activity bar's ::after) */
+  border: none;
+  background: none;
 }
 
 :root[data-mpce-modern]
