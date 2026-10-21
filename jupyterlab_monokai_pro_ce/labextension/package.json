@@ -1,6 +1,6 @@
 {
   "name": "jupyterlab-monokai-pro-ce",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Monokai Pro (CE) dark and light themes for JupyterLab",
   "keywords": [
     "jupyter",
@@ -196,7 +196,7 @@
       }
     },
     "_build": {
-      "load": "static/remoteEntry.e0a97a77818dcb78.js",
+      "load": "static/remoteEntry.96e06c2cbddcdd1c.js",
       "extension": "./extension",
       "style": "./style"
     }

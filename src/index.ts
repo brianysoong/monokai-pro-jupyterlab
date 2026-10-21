@@ -158,7 +158,14 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const routed = () =>
       terminalsInPanel && root.hasAttribute('data-mpce-modern');
     if (labShell && terminals) {
-      addTerminalCommands(app.commands, labShell, terminals, trans, routed);
+      addTerminalCommands(
+        app.commands,
+        labShell,
+        terminals,
+        trans,
+        routed,
+        app.serviceManager.terminals
+      );
       for (const command of [
         'monokai-pro-ce:toggle-terminal',
         'monokai-pro-ce:new-terminal',

@@ -121,12 +121,18 @@ export function routeTerminalsToPanel(
   });
 }
 
+/** The server's terminal sessions (`app.serviceManager.terminals`). */
+interface ITerminalSessions {
+  running(): IterableIterator<{ name: string }>;
+  refreshRunning(): Promise<void>;
+}
+
 /**
  * VS Code's terminal shortcuts:
  *
- * - toggle (Ctrl+`): open a terminal if there is none; otherwise show and
- *   focus it, or, if it already has focus, hide the bottom panel and return
- *   to the document.
+ * - toggle (Ctrl+`): if no terminal is open, reopen one still running on
+ *   the server, or open a new one; otherwise show and focus it, or, if it
+ *   already has focus, hide the bottom panel and return to the document.
  * - new (Ctrl+Shift+`): open another terminal.
  * - hide panel: hide the bottom panel, as its close button does.
  *
@@ -139,7 +145,8 @@ export function addTerminalCommands(
   shell: ILabShell,
   terminals: ITerminalTracker,
   trans: TranslationBundle,
-  routed: () => boolean
+  routed: () => boolean,
+  sessions: ITerminalSessions
 ): void {
   // The document to return to when the terminal is hidden
   let lastDocument: Widget | null = null;
@@ -171,6 +178,32 @@ export function addTerminalCommands(
   };
   const down = downArea(shell);
 
+  // Closing a terminal's tab keeps its session running on the server unless
+  // JupyterLab's "Shut down on close" is set. Remember the latest one, so
+  // toggling reopens it rather than starting yet another terminal.
+  let lastClosed: string | null = null;
+  terminals.widgetAdded.connect((_, widget) => {
+    widget.disposed.connect(() => {
+      lastClosed = widget.content.session?.name ?? lastClosed;
+    });
+  });
+  const runningSession = async (): Promise<string | null> => {
+    try {
+      await sessions.refreshRunning();
+    } catch {
+      // Use the last known list
+    }
+    const names = Array.from(sessions.running(), model => model.name);
+    if (lastClosed && names.includes(lastClosed)) {
+      return lastClosed;
+    }
+    // Otherwise the newest; JupyterLab names terminals 1, 2, 3, ...
+    return (
+      names.sort((a, b) => Number(b) - Number(a) || b.localeCompare(a))[0] ??
+      null
+    );
+  };
+
   commands.addCommand('monokai-pro-ce:toggle-terminal', {
     label: trans.__('Toggle Terminal'),
     describedBy: { args: { type: 'object', properties: {} } },
@@ -180,7 +213,11 @@ export function addTerminalCommands(
       }
       const terminal = panelTerminal();
       if (!terminal) {
-        await commands.execute('terminal:create-new');
+        const name = await runningSession();
+        await commands.execute(
+          name ? 'terminal:open' : 'terminal:create-new',
+          name ? { name } : {}
+        );
         return;
       }
       const docked = inPanel(terminal);

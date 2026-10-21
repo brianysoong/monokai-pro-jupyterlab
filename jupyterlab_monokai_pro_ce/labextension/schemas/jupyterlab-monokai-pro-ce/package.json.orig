@@ -1,6 +1,6 @@
 {
     "name": "jupyterlab-monokai-pro-ce",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Monokai Pro (CE) dark and light themes for JupyterLab",
     "keywords": [
         "jupyter",
